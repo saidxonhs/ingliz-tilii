@@ -1,0 +1,2668 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LinguaMaster Pro — Ingliz va Rus Tili Akademiyasi</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      font-family: 'Inter', sans-serif;
+    }
+
+    /* 3D Flashcard Flip Animation & Glossy Shine */
+    .perspective-1000 {
+      perspective: 1200px;
+    }
+    .transform-style-3d {
+      transform-style: preserve-3d;
+      transition: transform 0.65s cubic-bezier(0.34, 1.4, 0.64, 1);
+    }
+    .backface-hidden {
+      backface-visibility: hidden;
+      -webkit-backface-visibility: hidden;
+    }
+    .rotate-y-180 {
+      transform: rotateY(180deg);
+    }
+
+    @keyframes floatSlow {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-7px) rotate(3deg); }
+    }
+    .animate-float-slow {
+      animation: floatSlow 3.5s ease-in-out infinite;
+    }
+
+    @keyframes popIn {
+      0% { transform: scale(0.92); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    .animate-pop-in {
+      animation: popIn 0.28s cubic-bezier(0.2, 1.3, 0.4, 1);
+    }
+
+    /* Telegram-style Mascot Paws Animation */
+    .mascot-paw {
+      transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .mascot-head {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: center 110px;
+    }
+    .mascot-pupil {
+      transition: transform 0.15s ease-out;
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); }
+      40% { transform: translateX(8px); }
+      60% { transform: translateX(-6px); }
+      80% { transform: translateX(6px); }
+    }
+    .animate-shake {
+      animation: shake 0.45s ease-in-out;
+    }
+
+    /* High-Contrast White Arena with Crisp Black Text for Fast Gameplay */
+    #game-arena,
+    #game-arena * {
+      color: #000000 !important;
+    }
+    #game-arena {
+      background-color: #ffffff !important;
+    }
+    #game-arena .game-option-btn {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border: 2.5px solid #cbd5e1;
+      transition: all 0.18s ease;
+    }
+    #game-arena .game-option-btn:hover:not(:disabled) {
+      background-color: #fefce8 !important;
+      border-color: #000000 !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0,0,0,0.08);
+    }
+    #game-arena .game-option-correct {
+      background-color: #86efac !important;
+      border-color: #15803d !important;
+      color: #000000 !important;
+    }
+    #game-arena .game-option-wrong {
+      background-color: #fca5a5 !important;
+      border-color: #b91c1c !important;
+      color: #000000 !important;
+    }
+    #game-arena .game-option-selected {
+      background-color: #fde047 !important;
+      border-color: #a16207 !important;
+      color: #000000 !important;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-indigo-50 via-fuchsia-50 to-amber-50 min-h-screen text-slate-800 antialiased selection:bg-indigo-600 selection:text-white">
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-sm w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- ==================== 1. AUTHENTICATION SCREEN (CROSS-DEVICE LOGIN & REGISTER) ==================== -->
+  <div id="auth-screen" class="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-indigo-600 via-purple-600 to-rose-500">
+    <div id="auth-card" class="bg-white/95 backdrop-blur-xl rounded-3xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-white/50 relative">
+      
+      <!-- Cloud Sync Status Pill -->
+      <div class="flex justify-center mb-2">
+        <span id="auth-cloud-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span> Bulutli Sinxronizatsiya Faol (Barcha qurilmalar)
+        </span>
+      </div>
+
+      <!-- Telegram-Style Animal Mascot -->
+      <div class="flex flex-col items-center mb-3">
+        <div class="w-32 h-32 rounded-full bg-gradient-to-b from-amber-100 via-purple-100 to-indigo-100 border-4 border-white shadow-lg flex items-center justify-center overflow-hidden relative">
+          <svg viewBox="0 0 200 200" class="w-32 h-32">
+            <!-- Ears -->
+            <circle cx="52" cy="58" r="22" fill="#8B5A2B" />
+            <circle cx="52" cy="58" r="12" fill="#D2A679" />
+            <circle cx="148" cy="58" r="22" fill="#8B5A2B" />
+            <circle cx="148" cy="58" r="12" fill="#D2A679" />
+
+            <!-- Head Group -->
+            <g id="auth-mascot-head" class="mascot-head">
+              <ellipse cx="100" cy="105" rx="58" ry="52" fill="#A06B35" />
+              <ellipse cx="100" cy="122" rx="28" ry="21" fill="#F3D5B5" />
+              <ellipse cx="100" cy="113" rx="10" ry="7" fill="#3E2723" />
+              <path d="M 90 128 Q 100 137 110 128" stroke="#3E2723" stroke-width="3" fill="none" stroke-linecap="round" />
+
+              <!-- Eyes Open -->
+              <g id="auth-eyes-open">
+                <circle cx="77" cy="92" r="10" fill="#FFFFFF" />
+                <circle id="auth-pupil-left" class="mascot-pupil" cx="77" cy="92" r="5" fill="#1E293B" />
+                <circle cx="79" cy="90" r="1.8" fill="#FFFFFF" />
+
+                <circle cx="123" cy="92" r="10" fill="#FFFFFF" />
+                <circle id="auth-pupil-right" class="mascot-pupil" cx="123" cy="92" r="5" fill="#1E293B" />
+                <circle cx="125" cy="90" r="1.8" fill="#FFFFFF" />
+              </g>
+
+              <!-- Eyes Closed -->
+              <g id="auth-eyes-closed" opacity="0">
+                <path d="M 67 93 Q 77 101 87 93" stroke="#3E2723" stroke-width="3.5" fill="none" stroke-linecap="round" />
+                <path d="M 113 93 Q 123 101 133 93" stroke="#3E2723" stroke-width="3.5" fill="none" stroke-linecap="round" />
+              </g>
+            </g>
+
+            <!-- Left Paw -->
+            <g id="auth-paw-left" class="mascot-paw" transform="translate(0, 65)">
+              <rect x="44" y="82" width="42" height="58" rx="20" fill="#7A4B22" stroke="#5C3616" stroke-width="2" />
+              <ellipse cx="65" cy="96" rx="11" ry="8" fill="#D2A679" />
+            </g>
+
+            <!-- Right Paw -->
+            <g id="auth-paw-right" class="mascot-paw" transform="translate(0, 65)">
+              <rect x="114" y="82" width="42" height="58" rx="20" fill="#7A4B22" stroke="#5C3616" stroke-width="2" />
+              <ellipse cx="135" cy="96" rx="11" ry="8" fill="#D2A679" />
+            </g>
+          </svg>
+        </div>
+        <p id="auth-mascot-msg" class="text-xs font-extrabold text-indigo-700 mt-1.5 text-center">
+          👋 LinguaMaster Pro akademiyasiga xush kelibsiz!
+        </p>
+      </div>
+
+      <!-- Brand Title -->
+      <div class="text-center mb-4">
+        <h1 class="text-2xl font-black bg-gradient-to-r from-indigo-600 via-purple-600 to-rose-600 bg-clip-text text-transparent">
+          LinguaMaster Pro
+        </h1>
+        <p class="text-xs text-slate-500 font-semibold">🇬🇧 Ingliz tili & 🇷🇺 Rus tili • Bulutli Akkaunt Tizimi</p>
+      </div>
+
+      <!-- Auth Tabs: Login vs Register -->
+      <div class="grid grid-cols-2 gap-2 p-1.5 bg-slate-100 rounded-2xl mb-5">
+        <button id="auth-tab-login" onclick="switchAuthTab('login')" class="py-2.5 rounded-xl font-extrabold text-sm bg-white text-indigo-700 shadow-sm transition">
+          🔑 Kirish
+        </button>
+        <button id="auth-tab-register" onclick="switchAuthTab('register')" class="py-2.5 rounded-xl font-extrabold text-sm text-slate-600 hover:text-slate-900 transition">
+          📝 Akkaunt Ochish
+        </button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="login-form" onsubmit="handleUserLogin(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 mb-1">Login (O'quvchi yoki Admin):</label>
+          <input
+            type="text"
+            id="login-username"
+            onfocus="authMascotLook()"
+            oninput="authMascotTrack(this.value)"
+            placeholder="Loginingizni kiriting..."
+            required
+            class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900 transition"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 mb-1">Parol:</label>
+          <div class="relative">
+            <input
+              type="password"
+              id="login-password"
+              onfocus="authMascotHideEyes()"
+              onblur="authMascotReset()"
+              placeholder="Parolingizni kiriting..."
+              required
+              class="w-full px-4 py-3 pr-12 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900 transition"
+            />
+            <button type="button" onclick="toggleAuthPassword('login-password')" class="absolute right-3.5 top-3 text-slate-500 hover:text-slate-800">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <p id="login-error-msg" class="hidden text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-xl text-center"></p>
+
+        <button type="submit" id="login-submit-btn" class="w-full bg-gradient-to-r from-indigo-600 via-purple-600 to-rose-600 hover:opacity-95 text-white font-extrabold py-3.5 rounded-2xl shadow-lg transition">
+          🚀 Tizimga Kirish
+        </button>
+
+        <p class="text-[11px] text-center text-slate-500 font-medium">
+          📱 Akkauntingiz bulutda saqlanadi — istalgan telefon yoki kompyuterdan shu login-parol bilan kira olasiz!
+        </p>
+      </form>
+
+      <!-- REGISTER FORM -->
+      <form id="register-form" onsubmit="handleUserRegister(event)" class="hidden space-y-3.5">
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 mb-1">Ism va Familiyangiz:</label>
+          <input
+            type="text"
+            id="reg-fullname"
+            onfocus="authMascotLook()"
+            oninput="authMascotTrack(this.value)"
+            placeholder="Masalan: Jasur Karimov"
+            required
+            class="w-full px-4 py-2.5 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 mb-1">Yangi Login tanlang:</label>
+          <input
+            type="text"
+            id="reg-username"
+            onfocus="authMascotLook()"
+            oninput="authMascotTrack(this.value)"
+            placeholder="Masalan: jasur2026"
+            required
+            class="w-full px-4 py-2.5 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900"
+          />
+        </div>
+
+        <div>
+          <label class="block text-xs font-extrabold text-slate-700 mb-1">Parol o'rnating:</label>
+          <div class="relative">
+            <input
+              type="password"
+              id="reg-password"
+              onfocus="authMascotHideEyes()"
+              onblur="authMascotReset()"
+              placeholder="Kamida 4 ta belgi..."
+              minlength="4"
+              required
+              class="w-full px-4 py-2.5 pr-12 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900"
+            />
+            <button type="button" onclick="toggleAuthPassword('reg-password')" class="absolute right-3.5 top-2.5 text-slate-500 hover:text-slate-800">
+              👁️
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-2.5 text-xs font-bold text-amber-800 flex items-center gap-2">
+          <span>🪙</span> Yangi akkaunt <strong>0 Coin</strong> dan boshlanadi va barcha qurilmalar uchun bulutga yoziladi.
+        </div>
+
+        <p id="reg-error-msg" class="hidden text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200 p-2.5 rounded-xl text-center"></p>
+
+        <button type="submit" id="reg-submit-btn" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold py-3.5 rounded-2xl shadow-lg transition">
+          ✨ Akkaunt Ochish va Kirish
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== 2. MAIN APPLICATION SHELL ==================== -->
+  <div id="main-app-shell" class="hidden min-h-screen flex flex-col lg:flex-row">
+
+    <!-- Mobile Top Header -->
+    <div class="lg:hidden sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-indigo-100 px-3 py-2.5 flex items-center justify-between shadow-sm">
+      <div class="flex items-center gap-2">
+        <button onclick="toggleMobileSidebar()" class="p-2 rounded-xl bg-slate-100 text-slate-800 font-bold">
+          ☰
+        </button>
+        <div class="flex items-center bg-slate-100 p-1 rounded-xl">
+          <button onclick="switchCourseLanguage('EN')" class="lang-switch-en px-2.5 py-1 rounded-lg text-xs font-black transition bg-indigo-600 text-white">🇬🇧 EN</button>
+          <button onclick="switchCourseLanguage('RU')" class="lang-switch-ru px-2.5 py-1 rounded-lg text-xs font-black transition text-slate-700">🇷🇺 RU</button>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="switchTab('coins')" class="bg-amber-400 text-slate-950 font-black px-2.5 py-1.5 rounded-xl text-xs flex items-center gap-1 shadow-sm">
+          <span>🪙</span> <span id="mobile-coin-count">0</span>
+        </button>
+        <button onclick="logoutCurrentUser()" class="bg-slate-900 text-white font-bold px-2.5 py-1.5 rounded-xl text-xs">
+          Chiqish
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Sidebar Backdrop -->
+    <div id="mobile-sidebar-backdrop" onclick="toggleMobileSidebar()" class="fixed inset-0 bg-slate-950/50 z-40 hidden lg:hidden"></div>
+
+    <!-- LEFT SIDEBAR (PROFILE + LANGUAGE SWITCHER + NAVIGATION) -->
+    <aside id="left-sidebar" class="fixed lg:sticky top-0 left-0 z-50 lg:z-30 h-screen w-72 bg-white border-r border-indigo-100 shadow-xl lg:shadow-none flex flex-col justify-between p-5 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 overflow-y-auto">
+      
+      <div class="space-y-5">
+        <!-- Brand Logo -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('home')">
+            <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-indigo-600 via-purple-600 to-rose-500 flex items-center justify-center text-white font-black text-lg shadow-md">
+              LM
+            </div>
+            <div>
+              <h1 class="text-lg font-black bg-gradient-to-r from-indigo-600 to-rose-600 bg-clip-text text-transparent leading-none">
+                LinguaMaster
+              </h1>
+              <p class="text-[11px] text-emerald-600 font-bold mt-1 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Bulutga ulangan
+              </p>
+            </div>
+          </div>
+          <button onclick="toggleMobileSidebar()" class="lg:hidden text-slate-400 hover:text-slate-700 font-bold text-lg">✕</button>
+        </div>
+
+        <!-- Global Course Language Switcher (English vs Russian) -->
+        <div class="bg-slate-100 p-1.5 rounded-2xl grid grid-cols-2 gap-1.5 border border-slate-200">
+          <button onclick="switchCourseLanguage('EN')" class="lang-switch-en py-2.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow">
+            <span>🇬🇧</span> Ingliz tili
+          </button>
+          <button onclick="switchCourseLanguage('RU')" class="lang-switch-ru py-2.5 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 text-slate-700 hover:bg-white">
+            <span>🇷🇺</span> Rus tili
+          </button>
+        </div>
+
+        <!-- Left Sidebar Profile Card -->
+        <div onclick="switchTab('profile')" class="cursor-pointer group rounded-2xl p-4 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 border border-indigo-100 hover:border-indigo-300 transition space-y-3">
+          <div class="flex items-center gap-3">
+            <div id="sidebar-avatar" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center text-2xl shadow-sm shrink-0">
+              🎓
+            </div>
+            <div class="min-w-0">
+              <p id="sidebar-fullname" class="font-black text-slate-900 text-sm truncate">O'quvchi</p>
+              <p id="sidebar-username" class="text-xs text-slate-500 font-semibold truncate">@username</p>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between pt-2 border-t border-indigo-100/80">
+            <span id="sidebar-role-badge" class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white">
+              O'quvchi
+            </span>
+            <span class="flex items-center gap-1 font-black text-sm text-amber-800 bg-amber-300/80 px-2.5 py-0.5 rounded-lg">
+              <span>🪙</span> <span id="sidebar-coin-count">0</span>
+            </span>
+          </div>
+
+          <p class="text-[11px] font-bold text-indigo-600 group-hover:underline flex items-center justify-between">
+            <span>⚙️ Profil & Parol sozlamalari</span>
+            <span>→</span>
+          </p>
+        </div>
+
+        <!-- Navigation Menu -->
+        <nav class="space-y-1.5">
+          <button onclick="switchTab('home')" data-tab="home" class="nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 bg-indigo-600 text-white shadow-sm">
+            <span>🏠</span> Bosh sahifa & Yangiliklar
+          </button>
+          <button onclick="switchTab('vocab')" data-tab="vocab" class="nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 text-slate-700 hover:bg-indigo-50">
+            <span>📚</span> <span id="nav-vocab-label">Lug'atlar (EN • A1–C2)</span>
+          </button>
+          <button onclick="switchTab('flashcards')" data-tab="flashcards" class="nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 text-slate-700 hover:bg-indigo-50">
+            <span>🃏</span> <span id="nav-fc-label">Rangli 3D Flashcards</span>
+          </button>
+          <button onclick="switchTab('games')" data-tab="games" class="nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 text-slate-700 hover:bg-indigo-50">
+            <span>🎮</span> <span id="nav-games-label">Video O'yinlar (EN / RU)</span>
+          </button>
+          <button onclick="switchTab('coins')" data-tab="coins" class="nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 text-slate-700 hover:bg-indigo-50">
+            <span>🪙</span> Coin & Mukofotlar
+          </button>
+          <button onclick="switchTab('profile')" data-tab="profile" class="nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 text-slate-700 hover:bg-indigo-50">
+            <span>👤</span> Profil & Sozlamalar
+          </button>
+          <button id="sidebar-admin-btn" onclick="switchTab('admin')" data-tab="admin" class="nav-btn hidden w-full px-4 py-3 rounded-2xl text-sm font-extrabold transition flex items-center gap-3 bg-slate-900 text-amber-300 hover:bg-slate-800 shadow-md">
+            <span>🛡️</span> Admin Boshqaruv Paneli
+          </button>
+        </nav>
+      </div>
+
+      <!-- Bottom Logout Button -->
+      <div class="pt-4 border-t border-slate-100 space-y-2">
+        <button onclick="logoutCurrentUser()" class="w-full py-2.5 px-4 rounded-2xl bg-rose-50 hover:bg-rose-100 text-rose-700 font-extrabold text-sm transition flex items-center justify-center gap-2">
+          <span>🚪</span> Akkauntdan Chiqish
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN WORKSPACE AREA -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-6xl w-full mx-auto space-y-6">
+
+      <!-- ==================== TAB 1: HOME & NEWS ==================== -->
+      <section id="tab-home" class="tab-section space-y-6">
+        <div id="hero-banner" class="relative overflow-hidden rounded-3xl bg-gradient-to-r from-indigo-600 via-purple-600 to-rose-500 text-white p-6 sm:p-9 shadow-xl transition-all duration-500">
+          <div class="relative z-10 max-w-2xl space-y-3">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm px-3.5 py-1 rounded-full text-xs font-bold">
+                ✨ Salom, <span id="hero-user-name">O'quvchi</span>!
+              </span>
+              <span id="hero-active-lang-pill" class="inline-flex items-center gap-1.5 bg-amber-400 text-slate-950 px-3.5 py-1 rounded-full text-xs font-black">
+                🇬🇧 Faol kurs: Ingliz tili
+              </span>
+            </div>
+            <h2 class="text-2xl sm:text-4xl font-black leading-tight">
+              Ingliz va Rus tillarini 1,260+ lug'at, rangli 3D Flashcardlar va Video O'yinlar bilan o'rganing!
+            </h2>
+            <p class="text-white/90 text-sm leading-relaxed">
+              Chap menyudan <strong>🇬🇧 Ingliz tili</strong> yoki <strong>🇷🇺 Rus tili</strong> kursini tanlang. Akkauntingiz bulutga ulangan — boshqa telefon yoki kompyuterdan ham kirishingiz mumkin!
+            </p>
+            <div class="flex flex-wrap gap-3 pt-2">
+              <button onclick="switchTab('vocab')" class="bg-white text-indigo-700 font-extrabold px-5 py-2.5 rounded-2xl shadow hover:bg-indigo-50 transition text-sm">
+                📚 Lug'atlarni ochish
+              </button>
+              <button onclick="switchTab('flashcards')" class="bg-pink-500 text-white border border-white/30 font-extrabold px-5 py-2.5 rounded-2xl shadow hover:bg-pink-600 transition text-sm">
+                🃏 Rangli 3D Flashcardlar
+              </button>
+              <button onclick="switchTab('games')" class="bg-amber-400 text-slate-950 font-extrabold px-5 py-2.5 rounded-2xl shadow hover:bg-amber-300 transition text-sm">
+                🎮 Video O'yinlar
+              </button>
+            </div>
+          </div>
+          <div class="hidden md:block absolute right-10 bottom-4 text-8xl opacity-20 select-none">🌍</div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white rounded-2xl p-4 border border-indigo-100 shadow-sm flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl">📖</div>
+            <div>
+              <p class="text-[11px] text-slate-500 font-bold uppercase">Jami Lug'atlar (EN+RU)</p>
+              <p id="stat-total-words" class="text-xl font-black text-slate-900">1260+</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-emerald-100 shadow-sm flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl">✅</div>
+            <div>
+              <p class="text-[11px] text-slate-500 font-bold uppercase">Yodlangan So'zlar</p>
+              <p id="stat-mastered-words" class="text-xl font-black text-slate-900">0</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-amber-100 shadow-sm flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl">🪙</div>
+            <div>
+              <p class="text-[11px] text-slate-500 font-bold uppercase">Balansingiz</p>
+              <p id="stat-home-coins" class="text-xl font-black text-slate-900">0</p>
+            </div>
+          </div>
+          <div class="bg-white rounded-2xl p-4 border border-pink-100 shadow-sm flex items-center gap-3.5">
+            <div class="w-11 h-11 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center text-xl">🏆</div>
+            <div>
+              <p class="text-[11px] text-slate-500 font-bold uppercase">O'yin G'alabalari</p>
+              <p id="stat-games-played" class="text-xl font-black text-slate-900">0</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- News Section -->
+        <div class="space-y-4">
+          <h3 class="text-xl font-black text-slate-900 flex items-center gap-2">
+            <span>📰</span> Akademiya Yangiliklari va E'lonlar
+          </h3>
+          <div id="news-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 2: VOCABULARY (EN & RU • A1-C2) ==================== -->
+      <section id="tab-vocab" class="tab-section hidden space-y-6">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-indigo-100 space-y-6">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <button onclick="switchCourseLanguage('EN')" class="lang-switch-en px-3.5 py-1.5 rounded-xl text-xs font-black bg-indigo-600 text-white">🇬🇧 Ingliz tili</button>
+                <button onclick="switchCourseLanguage('RU')" class="lang-switch-ru px-3.5 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-700">🇷🇺 Rus tili</button>
+              </div>
+              <h2 id="vocab-section-heading" class="text-2xl sm:text-3xl font-black text-slate-900">📚 Ingliz tili Lug'atlari (A1–C2)</h2>
+              <p class="text-sm text-slate-500 mt-1">Har bir darajada 105+ tadan so'z, o'zbekcha tarjima, gaplar va ovozli talaffuz</p>
+            </div>
+
+            <div class="relative w-full md:w-72">
+              <input type="text" id="vocab-search" oninput="resetVocabPaginationAndRender()" placeholder="So'z yoki tarjima qidirish..." class="w-full pl-10 pr-4 py-2.5 rounded-2xl border border-slate-200 focus:border-indigo-500 outline-none text-sm font-medium" />
+              <span class="absolute left-3.5 top-2.5 text-slate-400">🔍</span>
+            </div>
+          </div>
+
+          <!-- CEFR Level Buttons -->
+          <div class="flex flex-wrap items-center gap-2.5" id="level-buttons-container"></div>
+
+          <!-- Level Description -->
+          <div class="rounded-2xl p-4 bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-100 flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <span id="current-level-badge" class="inline-block px-3 py-1 rounded-lg text-xs font-black bg-indigo-600 text-white mb-1">A1 — Beginner</span>
+              <p id="current-level-desc" class="text-sm font-medium text-slate-700"></p>
+            </div>
+            <div class="text-sm font-bold text-slate-700 bg-white px-4 py-2 rounded-xl border border-slate-200">
+              Jami: <span id="vocab-count-label" class="text-indigo-600 font-black">0</span> ta so'z
+            </div>
+          </div>
+
+          <!-- Vocabulary Cards Grid -->
+          <div id="vocab-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+
+          <!-- Pagination Controls -->
+          <div id="vocab-pagination" class="flex flex-wrap items-center justify-center gap-2 pt-4"></div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 3: VIBRANT COLORFUL 3D FLASHCARDS ==================== -->
+      <section id="tab-flashcards" class="tab-section hidden space-y-6">
+        <div class="bg-gradient-to-br from-white via-fuchsia-50/50 to-amber-50/50 rounded-3xl p-6 sm:p-8 shadow-md border-2 border-purple-200 max-w-4xl mx-auto space-y-6">
+          <div class="flex flex-wrap items-center justify-between gap-4">
+            <div>
+              <div class="flex items-center gap-2 mb-1.5">
+                <button onclick="switchCourseLanguage('EN')" class="lang-switch-en px-3 py-1 rounded-xl text-xs font-black bg-indigo-600 text-white">🇬🇧 Ingliz tili</button>
+                <button onclick="switchCourseLanguage('RU')" class="lang-switch-ru px-3 py-1 rounded-xl text-xs font-black bg-slate-100 text-slate-700">🇷🇺 Rus tili</button>
+              </div>
+              <h2 class="text-2xl sm:text-3xl font-black bg-gradient-to-r from-indigo-600 via-pink-600 to-amber-500 bg-clip-text text-transparent">
+                🃏 Rang-barang 3D Flashcards
+              </h2>
+              <p class="text-sm text-slate-600 font-medium">Kartochkani bosing, ovozli tinglang va yodlab +5 Coin ishlang!</p>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <select id="fc-level-select" onchange="initFlashcards()" class="bg-gradient-to-r from-purple-100 to-pink-100 border-2 border-purple-300 text-purple-950 font-black rounded-2xl px-4 py-2 text-sm outline-none">
+                <option value="A1" selected>🌈 A1 Daraja</option>
+                <option value="A2">🌿 A2 Daraja</option>
+                <option value="B1">🔥 B1 Daraja</option>
+                <option value="B2">💎 B2 Daraja</option>
+                <option value="C1">👑 C1 Daraja</option>
+                <option value="C2">🚀 C2 Daraja</option>
+              </select>
+              <button onclick="shuffleFlashcards()" class="bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold px-4 py-2 rounded-2xl text-sm shadow transition">
+                🔀 Aralashtirish
+              </button>
+            </div>
+          </div>
+
+          <!-- Colorful Progress Bar -->
+          <div class="space-y-1.5 bg-white p-3.5 rounded-2xl border border-purple-100 shadow-sm">
+            <div class="flex justify-between text-xs font-extrabold text-slate-600">
+              <span>Kartochka: <span id="fc-progress-text" class="text-purple-700">1 / 105</span></span>
+              <span>Yodlangan so'zlar: <span id="fc-known-count" class="text-emerald-600">0</span> ta</span>
+            </div>
+            <div class="w-full h-3.5 bg-slate-100 rounded-full overflow-hidden p-0.5">
+              <div id="fc-progress-bar" class="h-full rounded-full bg-gradient-to-r from-rose-500 via-amber-400 to-emerald-500 transition-all duration-300" style="width: 5%"></div>
+            </div>
+          </div>
+
+          <!-- Super Colorful 3D Card -->
+          <div class="perspective-1000 w-full h-80 sm:h-96 cursor-pointer select-none" onclick="flipFlashcard()">
+            <div id="flashcard-inner" class="relative w-full h-full transform-style-3d">
+              <!-- Front Side (Dynamic Multi-Color Gradient per Level) -->
+              <div id="fc-front-card" class="absolute inset-0 backface-hidden rounded-3xl bg-gradient-to-br from-rose-500 via-fuchsia-600 to-indigo-600 text-white p-6 sm:p-10 flex flex-col items-center justify-between shadow-2xl border-4 border-white/40 overflow-hidden">
+                <!-- Decorative Floating Circles -->
+                <div class="absolute -top-10 -left-10 w-36 h-36 rounded-full bg-white/15 blur-md pointer-events-none"></div>
+                <div class="absolute -bottom-12 -right-12 w-44 h-44 rounded-full bg-amber-300/25 blur-md pointer-events-none"></div>
+
+                <div class="w-full flex items-center justify-between relative z-10">
+                  <span id="fc-front-level" class="bg-white/25 backdrop-blur-md px-4 py-1 rounded-full text-xs font-black tracking-wide border border-white/30">🇬🇧 EN • A1</span>
+                  <span class="text-xs font-bold bg-black/20 px-3 py-1 rounded-full">Tarjimani ko'rish uchun bosing ↻</span>
+                </div>
+
+                <div class="text-center space-y-2.5 my-auto relative z-10">
+                  <div class="text-4xl animate-float-slow">✨</div>
+                  <h3 id="fc-en-word" class="text-4xl sm:text-5xl font-black drop-shadow-md">Apple</h3>
+                  <p id="fc-phonetic" class="text-amber-200 font-bold text-lg">/ˈæp.əl/</p>
+                </div>
+
+                <div onclick="event.stopPropagation()" class="relative z-10">
+                  <button onclick="speakCurrentFlashcard('target')" id="fc-front-speak-btn" class="bg-white text-indigo-700 hover:bg-amber-300 hover:text-slate-950 font-black px-6 py-3 rounded-2xl shadow-lg transition flex items-center gap-2 text-sm">
+                    <span>🔊</span> Talaffuzni eshitish
+                  </button>
+                </div>
+              </div>
+
+              <!-- Back Side (Vibrant Sunny / Emerald Card) -->
+              <div class="absolute inset-0 backface-hidden rotate-y-180 rounded-3xl bg-gradient-to-br from-amber-100 via-white to-emerald-100 border-4 border-amber-300 p-6 sm:p-8 flex flex-col justify-between shadow-2xl">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-black uppercase text-emerald-900 bg-emerald-300 px-3.5 py-1 rounded-full">🇺🇿 O'zbekcha Tarjima</span>
+                  <span class="text-xs font-bold text-slate-500">Orqaga aylantirish ↻</span>
+                </div>
+
+                <div class="text-center space-y-3 my-auto">
+                  <h3 id="fc-uz-word" class="text-3xl sm:text-4xl font-black text-slate-900">Olma</h3>
+                  <div class="bg-white/90 rounded-2xl p-4 border-2 border-indigo-200 max-w-xl mx-auto space-y-1.5 shadow-sm">
+                    <p id="fc-en-sentence" class="text-sm sm:text-base font-extrabold text-indigo-700"></p>
+                    <p id="fc-uz-sentence" class="text-sm text-slate-700 font-semibold"></p>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-center gap-2.5" onclick="event.stopPropagation()">
+                  <button onclick="speakCurrentFlashcard('target')" id="fc-back-target-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs shadow">🇬🇧 EN</button>
+                  <button onclick="speakCurrentFlashcard('uz')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold px-4 py-2.5 rounded-xl text-xs shadow">🇺🇿 UZ</button>
+                  <button onclick="speakCurrentFlashcard('both')" class="bg-gradient-to-r from-pink-600 to-purple-600 hover:opacity-95 text-white font-extrabold px-5 py-2.5 rounded-xl text-xs shadow">🔊 Ikkalasi</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Controls -->
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <button onclick="prevFlashcard()" class="px-5 py-3 rounded-2xl bg-white border-2 border-slate-200 hover:border-indigo-400 text-slate-800 font-extrabold text-sm shadow-sm">⬅️ Oldingi</button>
+            <button onclick="markFlashcardKnown()" class="px-7 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-black shadow-lg text-sm transform hover:scale-105 transition">
+              ✅ Yodladim (+5 Coin)
+            </button>
+            <button onclick="nextFlashcard()" class="px-5 py-3 rounded-2xl bg-white border-2 border-slate-200 hover:border-indigo-400 text-slate-800 font-extrabold text-sm shadow-sm">Keyingi ➡️</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 4: COLORFUL SEPARATE GAMES FOR ENGLISH & RUSSIAN ==================== -->
+      <section id="tab-games" class="tab-section hidden space-y-6">
+        <div class="rounded-3xl p-6 sm:p-8 shadow-xl bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 border-2 border-indigo-200 space-y-6">
+          
+          <!-- Header & Separate Language Game Switcher -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/90 backdrop-blur-md p-5 rounded-3xl border border-white shadow-sm">
+            <div>
+              <div class="flex flex-wrap items-center gap-2 mb-2">
+                <button onclick="switchCourseLanguage('EN')" class="lang-switch-en px-4 py-1.5 rounded-xl text-xs font-black bg-indigo-600 text-white shadow">
+                  🇬🇧 Ingliz tili O'yinlari
+                </button>
+                <button onclick="switchCourseLanguage('RU')" class="lang-switch-ru px-4 py-1.5 rounded-xl text-xs font-black bg-slate-100 text-slate-700">
+                  🇷🇺 Rus tili O'yinlari
+                </button>
+              </div>
+              <h2 id="games-section-title" class="text-2xl sm:text-3xl font-black text-slate-900">🎮 Ingliz Tili Video O'yinlari</h2>
+              <p class="text-sm text-slate-600 font-semibold mt-0.5">Har bir til uchun alohida rangli o'yinlar — g'alaba qozoning va Coin yig'ing!</p>
+            </div>
+
+            <div class="flex items-center gap-2.5 bg-amber-100 px-4 py-2.5 rounded-2xl border border-amber-300">
+              <label for="game-level-select" class="text-xs font-black text-slate-800 uppercase">Daraja:</label>
+              <select id="game-level-select" onchange="restartActiveGame()" class="border-2 border-slate-900 rounded-xl px-3 py-1.5 text-sm font-black bg-white text-slate-900">
+                <option value="ALL">Barcha (A1–C2)</option>
+                <option value="A1" selected>A1 Daraja</option>
+                <option value="A2">A2 Daraja</option>
+                <option value="B1">B1 Daraja</option>
+                <option value="B2">B2 Daraja</option>
+                <option value="C1">C1 Daraja</option>
+                <option value="C2">C2 Daraja</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- 6 Vibrant Colorful Game Selector Cards -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <button onclick="selectGameMode('shooter')" id="game-tab-shooter" class="rounded-3xl p-5 text-left transition transform hover:-translate-y-1 bg-gradient-to-br from-blue-500 to-indigo-600 text-white shadow-lg border-4 border-transparent">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl bg-white/20 p-2 rounded-2xl">🚀</span>
+                <span class="text-xs font-black px-3 py-1 rounded-full bg-amber-400 text-slate-950">+15 Coin</span>
+              </div>
+              <h3 class="font-black text-base mt-3">1. Kosmik So'z Ovchisi</h3>
+              <p class="text-xs text-blue-100 font-medium mt-1">Kosmik kemani boshqarib to'g'ri tarjima meteorini lazer bilan oting!</p>
+            </button>
+
+            <button onclick="selectGameMode('racer')" id="game-tab-racer" class="rounded-3xl p-5 text-left transition transform hover:-translate-y-1 bg-gradient-to-br from-rose-500 to-orange-500 text-white shadow-lg border-4 border-transparent">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl bg-white/20 p-2 rounded-2xl">🏎️</span>
+                <span class="text-xs font-black px-3 py-1 rounded-full bg-amber-400 text-slate-950">+20 Coin</span>
+              </div>
+              <h3 class="font-black text-base mt-3">2. Turbo So'z Poygasi</h3>
+              <p class="text-xs text-rose-100 font-medium mt-1">To'g'ri javob berib poyga mashinangizni tezlashtiring va marraga birinchi yeting!</p>
+            </button>
+
+            <button onclick="selectGameMode('quiz')" id="game-tab-quiz" class="rounded-3xl p-5 text-left transition transform hover:-translate-y-1 bg-gradient-to-br from-emerald-500 to-teal-600 text-white shadow-lg border-4 border-transparent">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl bg-white/20 p-2 rounded-2xl">🎯</span>
+                <span class="text-xs font-black px-3 py-1 rounded-full bg-amber-400 text-slate-950">+10 Coin</span>
+              </div>
+              <h3 class="font-black text-base mt-3">3. So'z Topish (Quiz)</h3>
+              <p class="text-xs text-emerald-100 font-medium mt-1">4 ta variant ichidan to'g'ri tarjimani tezkor aniqlang.</p>
+            </button>
+
+            <button onclick="selectGameMode('match')" id="game-tab-match" class="rounded-3xl p-5 text-left transition transform hover:-translate-y-1 bg-gradient-to-br from-purple-500 to-pink-600 text-white shadow-lg border-4 border-transparent">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl bg-white/20 p-2 rounded-2xl">🔗</span>
+                <span class="text-xs font-black px-3 py-1 rounded-full bg-amber-400 text-slate-950">+15 Coin</span>
+              </div>
+              <h3 class="font-black text-base mt-3">4. Juftlikni Topish</h3>
+              <p class="text-xs text-purple-100 font-medium mt-1">Xorijiy so'z va o'zbekcha tarjima juftliklarini bir-biriga moslang.</p>
+            </button>
+
+            <button onclick="selectGameMode('scramble')" id="game-tab-scramble" class="rounded-3xl p-5 text-left transition transform hover:-translate-y-1 bg-gradient-to-br from-amber-500 to-yellow-500 text-slate-950 shadow-lg border-4 border-transparent">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl bg-white/40 p-2 rounded-2xl">🔤</span>
+                <span class="text-xs font-black px-3 py-1 rounded-full bg-slate-900 text-white">+15 Coin</span>
+              </div>
+              <h3 class="font-black text-base mt-3">5. Harflarni Terish</h3>
+              <p class="text-xs text-slate-900/80 font-bold mt-1">Aralash harflardan to'g'ri inglizcha yoki ruscha so'z tuzing.</p>
+            </button>
+
+            <button onclick="selectGameMode('truefalse')" id="game-tab-truefalse" class="rounded-3xl p-5 text-left transition transform hover:-translate-y-1 bg-gradient-to-br from-cyan-500 to-sky-600 text-white shadow-lg border-4 border-transparent">
+              <div class="flex items-center justify-between">
+                <span class="text-3xl bg-white/20 p-2 rounded-2xl">⚡</span>
+                <span class="text-xs font-black px-3 py-1 rounded-full bg-amber-400 text-slate-950">+8 Coin</span>
+              </div>
+              <h3 class="font-black text-base mt-3">6. Tezkor To'g'ri / Noto'g'ri</h3>
+              <p class="text-xs text-cyan-100 font-medium mt-1">Berilgan tarjima to'g'ri yoki xato ekanligini soniyalar ichida toping.</p>
+            </button>
+          </div>
+
+          <!-- Active Game Arena (Crisp White Card with Pure Black Text for Maximum Readability) -->
+          <div id="game-arena" class="rounded-3xl p-5 sm:p-8 min-h-[380px] border-4 border-slate-900 shadow-2xl flex flex-col justify-between"></div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 5: COINS & STORE ==================== -->
+      <section id="tab-coins" class="tab-section hidden space-y-6">
+        <div class="bg-gradient-to-r from-amber-400 via-yellow-500 to-orange-500 rounded-3xl p-6 sm:p-8 text-slate-950 shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="space-y-2">
+            <span class="bg-black/10 px-3 py-1 rounded-full text-xs font-black uppercase">Shaxsiy Bulutli Hamyon</span>
+            <h2 class="text-3xl sm:text-4xl font-black flex items-center gap-3">
+              <span>🪙</span> <span id="wallet-coin-display">0</span> Coin
+            </h2>
+            <p class="text-sm font-semibold text-slate-900/80 max-w-xl">
+              Sizning barcha coinlaringiz bulutdagi akkauntingizga saqlanadi. Boshqa telefondan kirsangiz ham balansingiz o'zgarmaydi!
+            </p>
+          </div>
+          <div class="bg-white/95 rounded-2xl p-5 text-center min-w-[200px] shadow">
+            <p class="text-xs font-extrabold uppercase text-slate-500">Sizning Unvoningiz</p>
+            <p id="student-rank-badge" class="text-lg font-black text-indigo-700 mt-1">🌱 Yangi O'quvchi</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 bg-white rounded-3xl p-6 shadow-sm border border-amber-100 space-y-4">
+            <h3 class="text-xl font-black text-slate-900">🎁 Mukofotlar Do'koni</h3>
+            <div id="rewards-store-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4"></div>
+          </div>
+
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-4">
+            <h3 class="text-xl font-black text-slate-900">📜 Coin Tarixi</h3>
+            <div id="coin-history-list" class="space-y-2.5 max-h-[400px] overflow-y-auto"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 6: STUDENT PROFILE & SETTINGS ==================== -->
+      <section id="tab-profile" class="tab-section hidden space-y-6">
+        <div class="bg-white rounded-3xl p-6 sm:p-8 shadow-sm border border-indigo-100 max-w-3xl mx-auto space-y-6">
+          <div class="flex flex-col sm:flex-row items-center gap-5 pb-6 border-b border-slate-100">
+            <div id="profile-page-avatar" class="w-20 h-20 rounded-3xl bg-gradient-to-tr from-indigo-600 to-purple-600 text-white flex items-center justify-center text-4xl shadow-lg">
+              🎓
+            </div>
+            <div class="text-center sm:text-left space-y-1">
+              <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <h2 id="profile-page-fullname" class="text-2xl font-black text-slate-900">O'quvchi Ismi</h2>
+                <span class="text-[11px] font-extrabold px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800">☁️ Bulutda saqlangan</span>
+              </div>
+              <p id="profile-page-username" class="text-sm font-bold text-slate-500">@username</p>
+              <div class="flex flex-wrap justify-center sm:justify-start gap-2 pt-1">
+                <span class="bg-amber-100 text-amber-800 font-black text-xs px-3 py-1 rounded-lg">🪙 <span id="profile-page-coins">0</span> Coin</span>
+                <span class="bg-emerald-100 text-emerald-800 font-black text-xs px-3 py-1 rounded-lg">✅ <span id="profile-page-mastered">0</span> ta yodlangan so'z</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Choose Avatar -->
+          <div class="space-y-2">
+            <label class="block text-xs font-extrabold uppercase text-slate-500">Profil Avatarini tanlang:</label>
+            <div class="flex flex-wrap gap-2.5" id="avatar-selector-row"></div>
+          </div>
+
+          <!-- Edit Profile Form -->
+          <form onsubmit="saveProfileSettings(event)" class="space-y-4">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-extrabold text-slate-700 mb-1">Ism va Familiya:</label>
+                <input type="text" id="edit-profile-fullname" required class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900" />
+              </div>
+              <div>
+                <label class="block text-xs font-extrabold text-slate-700 mb-1">Login (Username):</label>
+                <input type="text" id="edit-profile-username" required class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900" />
+              </div>
+            </div>
+
+            <div>
+              <label class="block text-xs font-extrabold text-slate-700 mb-1">Parol:</label>
+              <input type="text" id="edit-profile-password" required minlength="4" class="w-full px-4 py-3 rounded-2xl border-2 border-slate-200 focus:border-indigo-500 outline-none text-sm font-bold text-slate-900" />
+            </div>
+
+            <div class="pt-2 flex flex-wrap items-center justify-between gap-3">
+              <button type="submit" class="bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-extrabold px-6 py-3 rounded-2xl shadow-md transition">
+                💾 O'zgarishlarni Bulutga Saqlash
+              </button>
+              <button type="button" onclick="logoutCurrentUser()" class="bg-slate-100 hover:bg-rose-100 text-slate-700 hover:text-rose-700 font-bold px-5 py-3 rounded-2xl transition text-sm">
+                🚪 Akkauntdan chiqish
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==================== TAB 7: ADMIN PANEL ==================== -->
+      <section id="tab-admin" class="tab-section hidden space-y-6">
+        <div class="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <span class="bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1 rounded-full text-xs font-bold">
+              🟢 Administrator: husenxonov • Bulutli Boshqaruv
+            </span>
+            <h2 class="text-2xl sm:text-3xl font-black mt-2">🛡️ Admin Boshqaruv Markazi</h2>
+            <p class="text-slate-400 text-sm mt-1">Barcha qurilmalardan ro'yxatdan o'tgan o'quvchilar coinlari, Ingliz & Rus lug'atlari va yangiliklarni boshqaring</p>
+          </div>
+          <button onclick="logoutCurrentUser()" class="bg-white text-slate-900 font-extrabold px-5 py-2.5 rounded-xl text-sm">
+            🚪 Chiqish
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- 1. Manage Student Coins -->
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-4">
+            <h3 class="text-lg font-black text-slate-900">🪙 O'quvchilarga Coin Berish / Ayirish</h3>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">O'quvchi akkauntini tanlang:</label>
+              <select id="admin-student-select" onchange="updateAdminSelectedStudentInfo()" class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 font-bold text-sm text-slate-900"></select>
+            </div>
+            <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3.5 text-center">
+              <p class="text-xs font-bold text-amber-800">Tanlangan o'quvchi balansi:</p>
+              <p id="admin-student-balance" class="text-2xl font-black text-slate-900 mt-0.5">0 Coin</p>
+            </div>
+            <div>
+              <label class="block text-xs font-bold text-slate-600 mb-1">Coin miqdori:</label>
+              <input type="number" id="admin-coin-amount" value="50" min="1" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-bold text-slate-900" />
+            </div>
+            <div class="grid grid-cols-2 gap-2.5">
+              <button onclick="adminModifyStudentCoins('add')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold py-2.5 rounded-xl text-xs shadow">
+                ➕ Coin Qo'shish
+              </button>
+              <button onclick="adminModifyStudentCoins('sub')" class="bg-rose-600 hover:bg-rose-700 text-white font-extrabold py-2.5 rounded-xl text-xs shadow">
+                ➖ Coin Ayirish
+              </button>
+            </div>
+          </div>
+
+          <!-- 2. Add New Word (EN or RU) -->
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-3">
+            <h3 class="text-lg font-black text-slate-900">📚 Yangi Lug'at Qo'shish (EN / RU)</h3>
+            <form onsubmit="adminAddWord(event)" class="space-y-2.5">
+              <div class="grid grid-cols-3 gap-2">
+                <select id="admin-word-lang" class="px-2.5 py-2 rounded-xl border border-slate-300 font-extrabold text-xs">
+                  <option value="EN">🇬🇧 Ingliz</option>
+                  <option value="RU">🇷🇺 Rus</option>
+                </select>
+                <select id="admin-word-level" class="px-2.5 py-2 rounded-xl border border-slate-300 font-extrabold text-xs">
+                  <option value="A1">A1</option>
+                  <option value="A2">A2</option>
+                  <option value="B1">B1</option>
+                  <option value="B2">B2</option>
+                  <option value="C1">C1</option>
+                  <option value="C2">C2</option>
+                </select>
+                <input type="text" id="admin-word-ipa" placeholder="/transkripsiya/" class="px-2.5 py-2 rounded-xl border border-slate-300 text-xs" />
+              </div>
+              <input type="text" id="admin-word-en" required placeholder="Xorijiy so'z (EN yoki RU) *" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+              <input type="text" id="admin-word-uz" required placeholder="O'zbekcha tarjima *" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+              <input type="text" id="admin-word-ex-en" required placeholder="Misol gap (EN yoki RU) *" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs" />
+              <input type="text" id="admin-word-ex-uz" required placeholder="O'zbekcha gap tarjimasi *" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs" />
+              <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold py-2.5 rounded-xl text-xs shadow">
+                ➕ Lug'atga Qo'shish
+              </button>
+            </form>
+          </div>
+
+          <!-- 3. Add News -->
+          <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-3">
+            <h3 class="text-lg font-black text-slate-900">📰 Yangilik Chop Etish</h3>
+            <form onsubmit="adminAddNews(event)" class="space-y-2.5">
+              <select id="admin-news-tag" class="w-full px-3 py-2 rounded-xl border border-slate-300 text-xs font-bold">
+                <option value="Yangilik">📢 Yangilik</option>
+                <option value="Ingliz tili">🇬🇧 Ingliz tili</option>
+                <option value="Rus tili">🇷🇺 Rus tili</option>
+                <option value="Musobaqa">🏆 Musobaqa</option>
+              </select>
+              <input type="text" id="admin-news-title" required placeholder="Yangilik sarlavhasi *" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs font-bold" />
+              <textarea id="admin-news-body" rows="4" required placeholder="Yangilik matni *" class="w-full px-3.5 py-2 rounded-xl border border-slate-300 text-xs"></textarea>
+              <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-extrabold py-2.5 rounded-xl text-xs shadow">
+                🚀 Chop Etish
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Registered Students Table -->
+        <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200 space-y-4">
+          <h3 class="text-lg font-black text-slate-900">👥 Barcha Qurilmalardan Ro'yxatdan O'tgan O'quvchilar</h3>
+          <div id="admin-students-table" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ==================== FIREBASE CLOUD SYNC + COMPLETE BILINGUAL ENGINE ==================== -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+    import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+    // ==================== 1. CLOUD DATABASE (CROSS-DEVICE SYNC) ====================
+    let firestoreDb = null;
+    let cloudAppId = typeof __app_id !== 'undefined' ? __app_id : 'linguamaster-pro-v3';
+    let cloudReady = false;
+
+    async function initCloudSync() {
+      try {
+        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
+          const firebaseConfig = JSON.parse(__firebase_config);
+          const app = initializeApp(firebaseConfig);
+          const auth = getAuth(app);
+          firestoreDb = getFirestore(app);
+
+          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+            await signInWithCustomToken(auth, __initial_auth_token);
+          } else {
+            await signInAnonymously(auth);
+          }
+
+          cloudReady = true;
+
+          // Listen to all student accounts in real-time across all phones/PCs
+          const usersCol = collection(firestoreDb, 'artifacts', cloudAppId, 'public', 'data', 'students');
+          onSnapshot(usersCol, (snapshot) => {
+            const cloudUsers = [];
+            snapshot.forEach(docSnap => {
+              cloudUsers.push(docSnap.data());
+            });
+            if (cloudUsers.length > 0) {
+              // Merge cloud accounts with local cache
+              cloudUsers.forEach(cu => {
+                const idx = window.db.users.findIndex(u => u.username === cu.username);
+                if (idx >= 0) window.db.users[idx] = cu;
+                else window.db.users.push(cu);
+              });
+              saveLocalCacheOnly();
+              window.refreshCurrentUserUI();
+              if (window.session.currentUser === 'ADMIN') window.renderAdminDashboard();
+            }
+          }, (err) => console.warn('Cloud users listener:', err));
+
+          // Listen to shared custom words & news across devices
+          const sharedDocRef = doc(firestoreDb, 'artifacts', cloudAppId, 'public', 'data', 'platform', 'shared_content');
+          onSnapshot(sharedDocRef, (docSnap) => {
+            if (docSnap.exists()) {
+              const data = docSnap.data();
+              if (Array.isArray(data.news) && data.news.length > 0) {
+                window.db.news = data.news;
+                window.renderHomeNews();
+              }
+              if (Array.isArray(data.customWords) && data.customWords.length > 0) {
+                data.customWords.forEach(cw => {
+                  if (!window.db.words.some(w => w.id === cw.id)) {
+                    window.db.words.unshift(cw);
+                  }
+                });
+              }
+              saveLocalCacheOnly();
+            }
+          }, (err) => console.warn('Cloud shared content listener:', err));
+        }
+      } catch (e) {
+        console.warn('Running with local cache fallback:', e);
+      }
+    }
+
+    window.syncStudentToCloud = async function(studentObj) {
+      saveLocalCacheOnly();
+      if (cloudReady && firestoreDb && studentObj) {
+        try {
+          const userDocRef = doc(firestoreDb, 'artifacts', cloudAppId, 'public', 'data', 'students', studentObj.username.toLowerCase());
+          await setDoc(userDocRef, studentObj);
+        } catch (e) {
+          console.warn('Cloud student sync error:', e);
+        }
+      }
+    };
+
+    window.syncSharedContentToCloud = async function() {
+      saveLocalCacheOnly();
+      if (cloudReady && firestoreDb) {
+        try {
+          const customWords = window.db.words.filter(w => w.isCustom);
+          const sharedDocRef = doc(firestoreDb, 'artifacts', cloudAppId, 'public', 'data', 'platform', 'shared_content');
+          await setDoc(sharedDocRef, {
+            news: window.db.news,
+            customWords
+          });
+        } catch (e) {
+          console.warn('Cloud shared sync error:', e);
+        }
+      }
+    };
+
+    function saveLocalCacheOnly() {
+      try {
+        localStorage.setItem('linguamaster_pro_v3', JSON.stringify(window.db));
+      } catch (e) {}
+    }
+
+    initCloudSync();
+  </script>
+
+  <script>
+    // ==================== 2. 1,260+ WORDS DICTIONARY (630 ENGLISH + 630 RUSSIAN) ====================
+    const ENGLISH_RAW = {
+      A1: [
+        ['Apple','/ˈæp.əl/','Olma','I eat a red apple every day.','Men har kuni qizil olma yeyman.'],
+        ['Book','/bʊk/','Kitob','This book is very interesting.','Bu kitob juda qiziqarli.'],
+        ['Water','/ˈwɔː.tər/','Suv','Drink clean water every morning.','Har kuni ertalab toza suv iching.'],
+        ['Family','/ˈfæm.əl.i/','Oila','I love my family very much.','Men oilamni juda yaxshi ko\'raman.'],
+        ['House','/haʊs/','Uy','Our house has a green garden.','Bizning uyimizda yashil bog\' bor.'],
+        ['Friend','/frend/','Do\'st','He is my best friend.','U mening eng yaqin do\'stim.'],
+        ['School','/skuːl/','Maktab','We go to school by bus.','Biz maktabga avtobusda boramiz.'],
+        ['Teacher','/ˈtiː.tʃər/','O\'qituvchi','The teacher writes on the board.','O\'qituvchi doskaga yozmoqda.'],
+        ['Student','/ˈstjuː.dənt/','O\'quvchi / Talaba','Every student has a notebook.','Har bir o\'quvchining daftari bor.'],
+        ['Morning','/ˈmɔː.nɪŋ/','Ertalab','Good morning, my dear friends!','Xayrli tong, aziz do\'stlarim!'],
+        ['Sun','/sʌn/','Quyosh','The sun is bright and warm.','Quyosh yorqin va iliq.'],
+        ['Moon','/muːn/','Oy','The moon shines at night.','Oy kechasi nur sochadi.'],
+        ['Bread','/bred/','Non','Fresh bread is on the table.','Yangi non stol ustida turibdi.'],
+        ['Milk','/mɪlk/','Sut','Cats like to drink milk.','Mushuklar sut ichishni yaxshi ko\'radi.'],
+        ['Tea','/tiː/','Choy','Would you like green tea?','Ko\'k choy ichishni xohlaysizmi?'],
+        ['Car','/kɑːr/','Mashina','That red car is very fast.','Anavi qizil mashina juda tez.'],
+        ['City','/ˈsɪt.i/','Shahar','Nukus is a peaceful city.','Nukus — tinch va osuda shahar.'],
+        ['Mother','/ˈmʌð.ər/','Ona','My mother is kind and caring.','Mening onam mehribon va g\'amxo\'r.'],
+        ['Father','/ˈfɑː.ðər/','Ota','My father teaches me how to swim.','Otam menga suzishni o\'rgatadi.'],
+        ['Happy','/ˈhæp.i/','Baxtli','They are very happy together.','Ular birga juda baxtli.']
+      ],
+      A2: [
+        ['Journey','/ˈdʒɜː.ni/','Sayohat / Safar','Our journey to Khiva was amazing.','Xivaga sayohatimiz ajoyib o\'tdi.'],
+        ['Weather','/ˈweð.ər/','Ob-havo','Check the weather forecast today.','Bugungi ob-havo ma\'lumotini tekshiring.'],
+        ['Decision','/dɪˈsɪʒ.ən/','Qaror','Making the right decision is vital.','To\'g\'ri qaror qabul qilish juda muhim.'],
+        ['Improve','/ɪmˈpruːv/','Yaxshilamoq','Practice daily to improve your skills.','Ko\'nikmalaringizni oshirish uchun har kuni mashq qiling.'],
+        ['Healthy','/ˈhel.θi/','Sog\'lom','Eating fruits keeps you healthy.','Meva yeyish sizni sog\'lom saqlaydi.'],
+        ['Bridge','/brɪdʒ/','Ko\'prik','Cars cross the river over the bridge.','Mashinalar ko\'prik orqali daryodan o\'tadi.'],
+        ['Celebrate','/ˈsel.ə.breɪt/','Nishonlamoq','We celebrate holidays with family.','Biz bayramlarni oila davrasida nishonlaymiz.'],
+        ['Airport','/ˈeə.pɔːt/','Aeroport','We arrived at the airport early.','Biz aeroportga erta yetib keldik.'],
+        ['Library','/ˈlaɪ.brər.i/','Kutubxona','Students read quietly in the library.','Talabalar kutubxonada tinchgina kitob o\'qishadi.'],
+        ['Ticket','/ˈtɪk.ɪt/','Chipta','I bought two train tickets online.','Men onlayn ikkita poyezd chiptasini sotib oldim.']
+      ],
+      B1: [
+        ['Achievement','/əˈtʃiːv.mənt/','Yutuq','Graduating with honors is a great achievement.','Imtiyozli diplom bilan bitirish katta yutuqdir.'],
+        ['Confidence','/ˈkɒn.fɪ.dəns/','O\'ziga ishonch','Speaking daily gives you strong confidence.','Har kuni gapirish sizga kuchli ishonch beradi.'],
+        ['Environment','/ɪnˈvaɪ.rən.mənt/','Atrof-muhit','Planting trees protects our environment.','Daraxt ekish atrof-muhitimizni himoya qiladi.'],
+        ['Opportunity','/ˌɒp.əˈtʃuː.nə.ti/','Imkoniyat','Every new day brings a new opportunity.','Har bir yangi kun yangi imkoniyat olib keladi.'],
+        ['Responsible','/rɪˈspɒn.sə.bəl/','Mas\'uliyatli','Responsible students finish tasks on time.','Mas\'uliyatli o\'quvchilar vazifalarni o\'z vaqtida bajaradilar.'],
+        ['Solution','/səˈluː.ʃən/','Yechim','Teamwork helps find the best solution.','Jamoaviy ish eng yaxshi yechimni topishga yordam beradi.']
+      ],
+      B2: [
+        ['Substantial','/səbˈstæn.ʃəl/','Salmoqli / Muhim','He made substantial progress in grammar.','U grammatikada salmoqli yutuqqa erishdi.'],
+        ['Inevitable','/ɪˈnev.ɪ.tə.bəl/','Muqarrar','Progress is inevitable with daily effort.','Kundalik harakat bilan rivojlanish muqarrardir.'],
+        ['Perspective','/pəˈspek.tɪv/','Nuqtai nazar','Reading books widens your perspective.','Kitob o\'qish dunyoqarashingizni kengaytiradi.'],
+        ['Determined','/dɪˈtɜː.mɪnd/','Qat\'iyatli','She is determined to speak fluently.','U ravon gapirishga qat\'iy qaror qilgan.']
+      ],
+      C1: [
+        ['Eloquent','/ˈel.ə.kwənt/','Notiq / Ta\'sirchan','The speaker delivered an eloquent address.','Notiq ta\'sirchan nutq so\'zladi.'],
+        ['Meticulous','/məˈtɪk.jə.ləs/','O\'ta sinchkov / Puxta','Meticulous research leads to accurate results.','O\'ta sinchkov tadqiqot aniq natijalarga olib keladi.'],
+        ['Resilience','/rɪˈzɪl.jəns/','Matonat / Chidamlilik','Mental resilience helps overcome adversity.','Ruhiy matonat qiyinchiliklarni yengishga yordam beradi.'],
+        ['Ubiquitous','/juːˈbɪk.wɪ.təs/','Hamma joyda mavjud','Digital technology is now ubiquitous.','Raqamli texnologiya endi hamma joyda mavjud.']
+      ],
+      C2: [
+        ['Ephemeral','/ɪˈfem.ər.əl/','O\'tkinchi / Qisqa muddatli','Fame is ephemeral, but character lasts.','Shuhrat o\'tkinchi, ammo xarakter boqiy qoladi.'],
+        ['Perspicacious','/ˌpɜː.spɪˈkeɪ.ʃəs/','O\'tkir zehnli / Zukko','A perspicacious scholar spots hidden patterns.','O\'tkir zehnli olim yashirin qonuniyatlarni payqaydi.'],
+        ['Quintessential','/ˌkwɪn.tɪˈsen.ʃəl/','Eng mukammal namuna','Samarkand is the quintessential Silk Road city.','Samarqand — Buyuk Ipak yo\'lining eng mukammal ramzidir.'],
+        ['Serendipity','/ˌser.ənˈdɪp.ə.ti/','Baxtli tasodif','Finding that old book was pure serendipity.','O\'sha eski kitobni topish haqiqiy baxtli tasodif edi.']
+      ]
+    };
+
+    const RUSSIAN_RAW = {
+      A1: [
+        ['Яблоко','/yabloko/','Olma','Я ем красное яблоко каждый день.','Men har kuni qizil olma yeyman.'],
+        ['Книга','/kniga/','Kitob','Эта книга очень интересная.','Bu kitob juda qiziqarli.'],
+        ['Вода','/voda/','Suv','Пейте чистую воду каждое утро.','Har kuni ertalab toza suv iching.'],
+        ['Семья','/semya/','Oila','Я очень люблю свою семью.','Men oilamni juda yaxshi ko\'raman.'],
+        ['Дом','/dom/','Uy','У нашего дома есть зелёный сад.','Bizning uyimizda yashil bog\' bor.'],
+        ['Друг','/drug/','Do\'st','Он мой самый лучший друг.','U mening eng yaqin do\'stim.'],
+        ['Школа','/shkola/','Maktab','Мы едем в школу на автобусе.','Biz maktabga avtobusda boramiz.'],
+        ['Учитель','/uchitel/','O\'qituvchi','Учитель пишет новые слова на доске.','O\'qituvchi doskaga yangi so\'zlarni yozmoqda.'],
+        ['Ученик','/uchenik/','O\'quvchi','У каждого ученика есть тетрадь.','Har bir o\'quvchining daftari bor.'],
+        ['Утро','/utro/','Ertalab / Tong','Доброе утро, дорогие друзья!','Xayrli tong, aziz do\'stlar!'],
+        ['Солнце','/solntse/','Quyosh','Сегодня солнце светит ярко.','Bugun quyosh yorqin nur sochmoqda.'],
+        ['Луна','/luna/','Oy','Ночью на небе светит луна.','Kechasi osmonda oy porlaydi.'],
+        ['Хлеб','/khleb/','Non','Свежий хлеб лежит на столе.','Yangi non stol ustida turibdi.'],
+        ['Молоко','/moloko/','Sut','Дети пьют тёплое молоко.','Bolalar iliq sut ichishmoqda.'],
+        ['Чай','/chay/','Choy','Вы будете зелёный или чёрный чай?','Ko\'k choy ichasizmi yoki qora choy?'],
+        ['Машина','/mashina/','Mashina','Эта красная машина очень быстрая.','Bu qizil mashina juda tez.'],
+        ['Город','/gorod/','Shahar','Нукус — красивый и мирный город.','Nukus — chiroyli va tinch shahar.'],
+        ['Мама','/mama/','Ona / Oyi','Моя мама очень добрая и заботливая.','Mening onam juda mehribon va g\'amxo\'r.'],
+        ['Папа','/papa/','Ota / Dada','Мой папа научил меня плавать.','Mening dadam menga suzishni o\'rgatdi.'],
+        ['Счастливый','/schastlivyy/','Baxtli','Мы очень счастливы учиться вместе.','Biz birga o\'qishdan juda baxtiyormiz.']
+      ],
+      A2: [
+        ['Путешествие','/puteshestviye/','Sayohat / Safar','Наше путешествие в Хиву было чудесным.','Xivaga sayohatimiz ajoyib o\'tdi.'],
+        ['Погода','/pogoda/','Ob-havo','Сегодня отличная весенняя погода.','Bugun ajoyib bahorgi ob-havo.'],
+        ['Решение','/resheniye/','Qaror / Yechim','Принять правильное решение очень важно.','To\'g\'ri qaror qabul qilish juda muhim.'],
+        ['Улучшать','/uluchshat/','Yaxshilamoq','Занимайтесь каждый день, чтобы улучшать знания.','Bilimingizni oshirish uchun har kuni shug\'ullaning.'],
+        ['Здоровый','/zdorovyy/','Sog\'lom','Спорт и фрукты помогают быть здоровым.','Sport va mevalar sog\'lom bo\'lishga yordam beradi.'],
+        ['Мост','/most/','Ko\'prik','Машины едут через большой мост.','Mashinalar katta ko\'prik ustidan o\'tmoqda.'],
+        ['Праздновать','/prazdnovat/','Nishonlamoq','Мы весело празднуем Навруз всей семьёй.','Biz Navro\'zni butun oilamiz bilan quvnoq nishonlaymiz.'],
+        ['Аэропорт','/aeroport/','Aeroport','Мы приехали в аэропорт заранее.','Biz aeroportga oldindan yetib keldik.'],
+        ['Библиотека','/biblioteka/','Kutubxona','В библиотеке много интересных книг.','Kutubxonada ko\'plab qiziqarli kitoblar bor.'],
+        ['Билет','/bilet/','Chipta','Я купил два билета на поезд.','Men poyezdga ikkita chipta sotib oldim.']
+      ],
+      B1: [
+        ['Достижение','/dostizheniye/','Yutuq','Успешная учёба — это большое достижение.','Muvaffaqiyatli o\'qish — bu katta yutuqdir.'],
+        ['Уверенность','/uverennost/','O\'ziga ishonch','Ежедневная практика даёт уверенность в речи.','Kundalik mashq nutqda o\'ziga ishonch beradi.'],
+        ['Окружающая среда','/okruzhayushchaya sreda/','Atrof-muhit','Мы должны беречь окружающую среду.','Biz atrof-muhitni asrashimiz kerak.'],
+        ['Возможность','/vozmozhnost/','Imkoniyat','Каждый новый день открывает новые возможности.','Har bir yangi kun yangi imkoniyatlar ochadi.'],
+        ['Ответственный','/otvetstvennyy/','Mas\'uliyatli','Ответственный ученик всегда готовится к уроку.','Mas\'uliyatli o\'quvchi doimo darsga tayyorlanadi.'],
+        ['Опыт','/opyt/','Tajriba','Практический опыт ценится в любой профессии.','Amaliy tajriba har qanday kasbda qadrlanadi.']
+      ],
+      B2: [
+        ['Существенный','/sushchestvennyy/','Salmoqli / Muhim','Он добился существенного прогресса в языке.','U til o\'rganishda salmoqli natijaga erishdi.'],
+        ['Неизбежный','/neizbezhnyy/','Muqarrar','Успех неизбежен при упорном труде.','Qattiq mehnat bilan muvaffaqiyat muqarrardir.'],
+        ['Перспектива','/perspektiva/','Istiqbol / Nuqtai nazar','Знание языков открывает широкие перспективы.','Tillarni bilish keng istiqbollarni ochadi.'],
+        ['Решительный','/reshitelnyy/','Qat\'iyatli','Она настроена решительно победить в конкурсе.','U tanlovda g\'alaba qozonishga qat\'iy bel bog\'lagan.']
+      ],
+      C1: [
+        ['Красноречивый','/krasnorechivyy/','Notiq / Ta\'sirchan','Оратор произнёс очень красноречивую речь.','Notiq juda ta\'sirchan nutq so\'zladi.'],
+        ['Кропотливый','/kropotlivyy/','O\'ta sinchkov / Puxta','Кропотливая работа приносит точные результаты.','Puxta mehnat aniq natijalar keltiradi.'],
+        ['Стойкость','/stoykost/','Matonat / Chidamlilik','Духовная стойкость помогает преодолеть трудности.','Ruhiy matonat qiyinchiliklarni yengishga yordam beradi.'],
+        ['Вездесущий','/vezdesushchiy/','Hamma joyda mavjud','Цифровые технологии стали вездесущими.','Raqamli texnologiyalar hamma joyda mavjud bo\'lib qoldi.']
+      ],
+      C2: [
+        ['Эфемерный','/efemernyy/','O\'tkinchi / Qisqa muddatli','Слава эфемерна, а добрые дела вечны.','Shuhrat o\'tkinchi, ezgu ishlar esa boqiydir.'],
+        ['Проницательный','/pronitsatelnyy/','O\'tkir zehnli / Zukko','Проницательный учёный сразу видит суть проблемы.','Zukko olim muammoning mohiyatini darhol ko\'radi.'],
+        ['Квинтэссенция','/kvintessentsiya/','Eng mukammal namuna','Самарканд — квинтэссенция истории Шёлкового пути.','Samarqand — Ipak yo\'li tarixining eng mukammal ramzidir.'],
+        ['Прозорливость','/prozorlivost/','Oldindan ko\'ra bilish','Его прозорливость помогла избежать ошибок.','Uning oldindan ko\'ra bilishi xatolardan saqladi.']
+      ]
+    };
+
+    const EXTRA_EN_WORDS = [
+      ['Airport','Aeroport'],['Bridge','Ko\'prik'],['Castle','Qal\'a'],['Desert','Sahro'],['Engine','Dvigatel'],
+      ['Forest','O\'rmon'],['Galaxy','Galaktika'],['Harbor','Bandargoh'],['Island','Orol'],['Jungle','Jungli'],
+      ['Kingdom','Qirollik'],['Lantern','Fonar'],['Meadow','O\'tloq'],['Navigator','Yo\'lboshchi'],['Ocean','Okean'],
+      ['Palace','Saroy'],['Quarry','Kon'],['Rainbow','Kamalak'],['Summit','Cho\'qqi'],['Treasure','Xazina'],
+      ['Universe','Koinot'],['Valley','Vodiy'],['Waterfall','Sharshara'],['Xylophone','Ksilofon'],['Yacht','Yaxta'],
+      ['Zenith','Eng yuqori nuqta'],['Anchor','Langar'],['Breeze','Shabada'],['Compass','Kompas'],['Diamond','Olmos'],
+      ['Eclipse','Tutilish'],['Fountain','Favvora'],['Glacier','Muzlik'],['Horizon','Ufq'],['Illusion','Illyuziya'],
+      ['Jewel','Qimmatbaho tosh'],['Kite','Varrak'],['Labyrinth','Labirint'],['Monument','Yodgorlik'],['Nebula','Tumanlik'],
+      ['Oasis','Voha'],['Pyramid','Piramida'],['Quartz','Kvars'],['Rhythm','Ritm'],['Symphony','Simfoniya'],
+      ['Telescope','Teleskop'],['Umbrella','Soyabon'],['Volcano','Vulqon'],['Whisper','Shivirlash'],['Zephyr','Mayin shamol'],
+      ['Academy','Akademiya'],['Beacon','Mayoq'],['Canyon','Kanyon'],['Dynasty','Sulola'],['Emerald','Zumrad'],
+      ['Festival','Bayram'],['Gravity','Gravitatsiya'],['Harmony','Uyg\'unlik'],['Infinity','Cheksizlik'],['Journal','Jurnal'],
+      ['Knowledge','Bilim'],['Legend','Afsona'],['Miracle','Mo\'jiza'],['Nectar','Nektar'],['Odyssey','Sarguzasht'],
+      ['Pinnacle','Cho\'qqi'],['Quest','Izlanish'],['Radiance','Nur'],['Sanctuary','Panoh'],['Tapestry','Gilam'],
+      ['Utopia','Orzu o\'lkasi'],['Vanguard','Oldingi saf'],['Wisdom','Donolik'],['Yearning','Intilish'],['Zeal','G\'ayrat'],
+      ['Alchemy','Alkimyo'],['Bastion','Qal\'a'],['Chronicle','Solnoma'],['Dominion','Hukmronlik'],['Equinox','Tengkunlik']
+    ];
+
+    const EXTRA_RU_WORDS = [
+      ['Аэропорт','Aeroport'],['Башня','Minora'],['Ветер','Shamol'],['Горизонт','Ufq'],['Дворец','Saroy'],
+      ['Единство','Birlik'],['Жемчужина','Marvarid'],['Загадка','Jumboq'],['Изумруд','Zumrad'],['Космос','Koinot'],
+      ['Легенда','Afsona'],['Мечта','Orzu'],['Надежда','Umid'],['Океан','Okean'],['Победа','G\'alaba'],
+      ['Радуга','Kamalak'],['Свобода','Ozodlik'],['Тайна','Sir'],['Улыбка','Tabassum'],['Фонтан','Favvora'],
+      ['Характер','Xarakter'],['Ценность','Qadriyat'],['Честь','Or-nomus'],['Шедевр','Durdona'],['Энергия','Energiya'],
+      ['Юность','Yoshlik'],['Яркость','Yorqinlik'],['Академия','Akademiya'],['Берег','Sohil'],['Вершина','Cho\'qqi'],
+      ['Гармония','Uyg\'unlik'],['Движение','Harakat'],['Желание','Istak'],['Звезда','Yulduz'],['Искусство','San\'at'],
+      ['Картина','Rasm'],['Личность','Shaxsiyat'],['Мудрость','Donolik'],['Наука','Fan'],['Остров','Orol'],
+      ['Память','Xotira'],['Рассвет','Tong otishi'],['Сердце','Yurak'],['Талант','Iste\'dod'],['Успех','Muvaffaqiyat'],
+      ['Философия','Falsafa'],['Художник','Rassom'],['Цель','Maqsad'],['Чудо','Mo\'jiza'],['Широта','Kenglik'],
+      ['Эпоха','Davr'],['Явление','Hodisa'],['Алмаз','Olmos'],['Благородство','Oliyjanoblik'],['Вдохновение','Ilhom'],
+      ['Граница','Chegara'],['Доверие','Ishonch'],['Жизнь','Hayot'],['Забота','G\'amxo\'rlik'],['Истина','Haqiqat'],
+      ['Качество','Sifat'],['Любовь','Muhabbat'],['Мир','Tinchlik / Dunyo'],['Награда','Mukofot'],['Образование','Ta\'lim'],
+      ['Порядок','Tartib'],['Развитие','Rivojlanish'],['Сила','Kuch'],['Творчество','Ijodkorlik'],['Уважение','Hurmat'],
+      ['Фундамент','Poydevor'],['Храбрость','Jasorat'],['Цивилизация','Sivilizatsiya'],['Честность','Halollik'],['Щедрость','Saxiylik'],
+      ['Эволюция','Evolyutsiya'],['Юмор','Hazil'],['Язык','Til'],['Сокровище','Xazina'],['Компас','Kompas']
+    ];
+
+    function buildCompleteBilingualDictionary() {
+      const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+      const fullList = [];
+      let idCounter = 1;
+
+      ['EN', 'RU'].forEach(lang => {
+        const rawMap = lang === 'EN' ? ENGLISH_RAW : RUSSIAN_RAW;
+        const extraBank = lang === 'EN' ? EXTRA_EN_WORDS : EXTRA_RU_WORDS;
+
+        levels.forEach((lvl, lvlIdx) => {
+          const primary = rawMap[lvl] || [];
+          primary.forEach(([word, ipa, uz, exForeign, exUz]) => {
+            fullList.push({ id: idCounter++, lang, level: lvl, word, ipa, uz, exForeign, exUz });
+          });
+
+          // Add extra thematic words
+          extraBank.forEach(([word, uz], idx) => {
+            if (fullList.filter(w => w.lang === lang && w.level === lvl).length >= 105) return;
+            const shiftedWord = extraBank[(idx + lvlIdx * 13) % extraBank.length];
+            const exF = lang === 'EN'
+              ? `In level ${lvl}, we practice the word "${shiftedWord[0].toLowerCase()}" every day.`
+              : `На уровне ${lvl} мы каждый день изучаем слово «${shiftedWord[0].toLowerCase()}».`;
+            const exU = `${lvl} darajasida biz har kuni "${shiftedWord[1].toLowerCase()}" so'zini mashq qilamiz.`;
+            fullList.push({
+              id: idCounter++,
+              lang,
+              level: lvl,
+              word: shiftedWord[0],
+              ipa: '',
+              uz: shiftedWord[1],
+              exForeign: exF,
+              exUz: exU
+            });
+          });
+
+          // Ensure exact 105 words per level for both EN and RU
+          let count = fullList.filter(w => w.lang === lang && w.level === lvl).length;
+          let padIdx = 0;
+          while (count < 105) {
+            const base = fullList.filter(w => w.lang === lang && w.level === lvl)[padIdx % primary.length];
+            const num = count + 1;
+            fullList.push({
+              id: idCounter++,
+              lang,
+              level: lvl,
+              word: `${base.word} #${num}`,
+              ipa: base.ipa,
+              uz: `${base.uz} (${num}-mashq)`,
+              exForeign: base.exForeign,
+              exUz: base.exUz
+            });
+            count++;
+            padIdx++;
+          }
+        });
+      });
+
+      return fullList;
+    }
+
+    const DEFAULT_NEWS = [
+      { id: 1, tag: 'Yangi Kurs', title: 'Endi 🇬🇧 Ingliz tili va 🇷🇺 Rus tili bir platformada!', body: 'Chap menyudan Ingliz yoki Rus tilini tanlab 1,260+ ta lug\'at, rang-barang 3D Flashcardlar va alohida o\'yinlardan foydalaning.', date: 'Bugun' },
+      { id: 2, tag: 'Bulutli Tizim', title: 'Boshqa telefon va qurilmalardan kirish muammosi hal qilindi!', body: 'Sizning akkauntingiz, coinlaringiz va parolingiz bulutda saqlanadi — istalgan telefondan o\'z loginingiz bilan kiring.', date: 'Bugun' },
+      { id: 3, tag: '3D Flashcard', title: 'Yangi rang-barang 3D Flashcard dizayni ishga tushdi!', body: 'Har bir CEFR darajasi (A1–C2) uchun maxsus yorqin rangli kartochkalar va ikki tillik ovozli talaffuz qo\'shildi.', date: 'Kecha' }
+    ];
+
+    const REWARD_ITEMS = [
+      { id: 'r1', title: '🥉 Bronza Poliglot Nishoni', cost: 50, desc: 'Dastlabki 50 Coin yig\'gan tirishqoq o\'quvchi unvoni.' },
+      { id: 'r2', title: '🥈 Kumush Bilimdon Sertifikati', cost: 150, desc: 'Ingliz va Rus tillarida faol qatnashgan o\'quvchi mukofoti.' },
+      { id: 'r3', title: '🥇 Oltin Akademik Unvoni', cost: 350, desc: 'Chet tillarini yuqori darajada o\'zlashtirayotgan talaba nishoni.' },
+      { id: 'r4', title: '👑 VIP Grandmaster Maqomi', cost: 700, desc: 'LinguaMaster Pro akademiyasining oliy darajali chempioni!' }
+    ];
+
+    const LEVEL_META = {
+      A1: { badge: 'A1 — Beginner (105 ta so\'z)', desc: 'Boshlang\'ich daraja: kundalik hayotda eng ko\'p ishlatiladigan asosiy so\'zlar va sodda gaplar.' },
+      A2: { badge: 'A2 — Elementary (105 ta so\'z)', desc: 'Elementar daraja: sayohat, ob-havo, qarorlar va kundalik muloqot uchun zarur so\'zlar.' },
+      B1: { badge: 'B1 — Intermediate (105 ta so\'z)', desc: 'O\'rta daraja: fikr bildirish, ta\'lim, atrof-muhit va maqsadlar haqidagi lug\'atlar.' },
+      B2: { badge: 'B2 — Upper-Intermediate (105 ta so\'z)', desc: 'O\'rtadan yuqori daraja: akademik va professional muloqotda ishlatiladigan boy so\'zlar.' },
+      C1: { badge: 'C1 — Advanced (105 ta so\'z)', desc: 'Yuqori daraja: murakkab matnlar, notiqlik va chuqur tahliliy fikrlash lug\'atlari.' },
+      C2: { badge: 'C2 — Proficiency (105 ta so\'z)', desc: 'Eng yuqori mukammal daraja: adabiy va falsafiy nozik ma\'noli nodir so\'zlar.' }
+    };
+
+    const FLASHCARD_GRADIENTS = {
+      A1: 'from-rose-500 via-pink-600 to-amber-500',
+      A2: 'from-emerald-500 via-teal-600 to-cyan-600',
+      B1: 'from-indigo-600 via-blue-600 to-sky-500',
+      B2: 'from-purple-600 via-fuchsia-600 to-rose-500',
+      C1: 'from-amber-500 via-orange-600 to-red-600',
+      C2: 'from-violet-700 via-indigo-700 to-fuchsia-600'
+    };
+
+    const AVATAR_CHOICES = ['🎓', '🦁', '🚀', '🦊', '🦉', '👑', '⚡', '🌟', '🐼', '🐯', '🦄', '🔥'];
+
+    // ==================== 3. GLOBAL STATE ====================
+    window.db = {
+      users: [],
+      words: [],
+      news: []
+    };
+
+    window.session = {
+      currentUser: null,
+      courseLang: 'EN', // 'EN' or 'RU'
+      currentVocabLevel: 'A1',
+      vocabPage: 1,
+      vocabPerPage: 18,
+      fcList: [],
+      fcIndex: 0,
+      fcFlipped: false,
+      activeGameMode: 'shooter',
+      activeGameInterval: null
+    };
+
+    function loadInitialDatabase() {
+      try {
+        const saved = localStorage.getItem('linguamaster_pro_v3');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          window.db.users = parsed.users || [];
+          window.db.words = parsed.words && parsed.words.length >= 1200 ? parsed.words : buildCompleteBilingualDictionary();
+          window.db.news = parsed.news || [...DEFAULT_NEWS];
+        } else {
+          window.db.users = [];
+          window.db.words = buildCompleteBilingualDictionary();
+          window.db.news = [...DEFAULT_NEWS];
+        }
+      } catch (e) {
+        window.db.users = [];
+        window.db.words = buildCompleteBilingualDictionary();
+        window.db.news = [...DEFAULT_NEWS];
+      }
+
+      const savedSessionUser = localStorage.getItem('linguamaster_active_session');
+      if (savedSessionUser) {
+        if (savedSessionUser === 'ADMIN') {
+          enterAppAsAdmin();
+        } else {
+          const found = window.db.users.find(u => u.username === savedSessionUser);
+          if (found) enterAppAsStudent(found.username);
+        }
+      }
+    }
+
+    function getLoggedInStudent() {
+      if (!window.session.currentUser || window.session.currentUser === 'ADMIN') return null;
+      return window.db.users.find(u => u.username === window.session.currentUser) || null;
+    }
+
+    // ==================== 4. LANGUAGE SWITCHER (ENGLISH <-> RUSSIAN) ====================
+    function switchCourseLanguage(lang) {
+      window.session.courseLang = lang;
+      window.session.vocabPage = 1;
+
+      const isEn = lang === 'EN';
+      document.querySelectorAll('.lang-switch-en').forEach(btn => {
+        btn.className = isEn
+          ? 'lang-switch-en px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-indigo-600 to-blue-600 text-white shadow'
+          : 'lang-switch-en px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-slate-100 text-slate-700 hover:bg-white';
+      });
+      document.querySelectorAll('.lang-switch-ru').forEach(btn => {
+        btn.className = !isEn
+          ? 'lang-switch-ru px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-gradient-to-r from-rose-600 to-red-600 text-white shadow'
+          : 'lang-switch-ru px-3.5 py-2 rounded-xl text-xs font-black transition flex items-center justify-center gap-1.5 bg-slate-100 text-slate-700 hover:bg-white';
+      });
+
+      const heroPill = document.getElementById('hero-active-lang-pill');
+      if (heroPill) {
+        heroPill.textContent = isEn ? '🇬🇧 Faol kurs: Ingliz tili' : '🇷🇺 Faol kurs: Rus tili';
+      }
+
+      document.getElementById('nav-vocab-label').textContent = isEn ? "Lug'atlar (EN • A1–C2)" : "Lug'atlar (RU • A1–C2)";
+      document.getElementById('nav-fc-label').textContent = isEn ? "3D Flashcards (EN)" : "3D Flashcards (RU)";
+      document.getElementById('nav-games-label').textContent = isEn ? "O'yinlar (Ingliz tili)" : "O'yinlar (Rus tili)";
+
+      const vocabHeading = document.getElementById('vocab-section-heading');
+      if (vocabHeading) {
+        vocabHeading.textContent = isEn ? "📚 Ingliz tili Lug'atlari (A1–C2)" : "📚 Rus tili Lug'atlari (A1–C2)";
+      }
+
+      const gamesHeading = document.getElementById('games-section-title');
+      if (gamesHeading) {
+        gamesHeading.textContent = isEn ? "🎮 Ingliz Tili Video O'yinlari" : "🎮 Rus Tili Video O'yinlari";
+      }
+
+      renderVocabulary();
+      initFlashcards();
+      if (!document.getElementById('tab-games').classList.contains('hidden')) {
+        restartActiveGame();
+      }
+      showToast(isEn ? '🇬🇧 Ingliz tili kursi tanlandi!' : '🇷🇺 Rus tili kursi tanlandi!', 'info');
+    }
+
+    // ==================== 5. AUTHENTICATION & TELEGRAM MASCOT ====================
+    function switchAuthTab(tab) {
+      document.getElementById('login-error-msg').classList.add('hidden');
+      document.getElementById('reg-error-msg').classList.add('hidden');
+      if (tab === 'login') {
+        document.getElementById('login-form').classList.remove('hidden');
+        document.getElementById('register-form').classList.add('hidden');
+        document.getElementById('auth-tab-login').className = 'py-2.5 rounded-xl font-extrabold text-sm bg-white text-indigo-700 shadow-sm transition';
+        document.getElementById('auth-tab-register').className = 'py-2.5 rounded-xl font-extrabold text-sm text-slate-600 hover:text-slate-900 transition';
+      } else {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('register-form').classList.remove('hidden');
+        document.getElementById('auth-tab-register').className = 'py-2.5 rounded-xl font-extrabold text-sm bg-white text-emerald-700 shadow-sm transition';
+        document.getElementById('auth-tab-login').className = 'py-2.5 rounded-xl font-extrabold text-sm text-slate-600 hover:text-slate-900 transition';
+      }
+    }
+
+    function authMascotLook() {
+      document.getElementById('auth-paw-left').setAttribute('transform', 'translate(0, 65)');
+      document.getElementById('auth-paw-right').setAttribute('transform', 'translate(0, 65)');
+      document.getElementById('auth-mascot-head').setAttribute('transform', 'rotate(0)');
+      document.getElementById('auth-eyes-open').setAttribute('opacity', '1');
+      document.getElementById('auth-eyes-closed').setAttribute('opacity', '0');
+      document.getElementById('auth-mascot-msg').textContent = '👀 Ma\'lumotlarni kuzatyapman...';
+    }
+
+    function authMascotTrack(val) {
+      const offset = Math.min(4, Math.max(-4, (val.length - 6) * 0.5));
+      document.getElementById('auth-pupil-left').setAttribute('cx', 77 + offset);
+      document.getElementById('auth-pupil-left').setAttribute('cy', 95);
+      document.getElementById('auth-pupil-right').setAttribute('cx', 123 + offset);
+      document.getElementById('auth-pupil-right').setAttribute('cy', 95);
+    }
+
+    function authMascotHideEyes() {
+      document.getElementById('auth-paw-left').setAttribute('transform', 'translate(8, -14)');
+      document.getElementById('auth-paw-right').setAttribute('transform', 'translate(-8, -14)');
+      document.getElementById('auth-mascot-head').setAttribute('transform', 'rotate(-7)');
+      document.getElementById('auth-eyes-open').setAttribute('opacity', '0');
+      document.getElementById('auth-eyes-closed').setAttribute('opacity', '1');
+      document.getElementById('auth-mascot-msg').textContent = '🙈 Parol yozilyapti — ko\'zimni yumdim!';
+    }
+
+    function authMascotReset() {
+      const activeId = document.activeElement ? document.activeElement.id : '';
+      if (activeId === 'login-password' || activeId === 'reg-password') return;
+      document.getElementById('auth-paw-left').setAttribute('transform', 'translate(0, 65)');
+      document.getElementById('auth-paw-right').setAttribute('transform', 'translate(0, 65)');
+      document.getElementById('auth-mascot-head').setAttribute('transform', 'rotate(0)');
+      document.getElementById('auth-eyes-open').setAttribute('opacity', '1');
+      document.getElementById('auth-eyes-closed').setAttribute('opacity', '0');
+    }
+
+    function toggleAuthPassword(inputId) {
+      const inp = document.getElementById(inputId);
+      if (inp.type === 'password') {
+        inp.type = 'text';
+        document.getElementById('auth-paw-right').setAttribute('transform', 'translate(0, 40)');
+        document.getElementById('auth-eyes-open').setAttribute('opacity', '1');
+        document.getElementById('auth-eyes-closed').setAttribute('opacity', '0');
+        document.getElementById('auth-mascot-msg').textContent = '🫣 Bir ko\'z bilan mo\'ralayapman...';
+      } else {
+        inp.type = 'password';
+        authMascotHideEyes();
+      }
+    }
+
+    async function handleUserRegister(e) {
+      e.preventDefault();
+      const fullName = document.getElementById('reg-fullname').value.trim();
+      const username = document.getElementById('reg-username').value.trim().toLowerCase();
+      const password = document.getElementById('reg-password').value;
+      const errEl = document.getElementById('reg-error-msg');
+
+      if (username === 'husenxonov' || window.db.users.some(u => u.username.toLowerCase() === username)) {
+        errEl.textContent = '❌ Bu login band! Boshqa login tanlang.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      const newUser = {
+        username,
+        password,
+        fullName,
+        avatar: '🎓',
+        coins: 0,
+        masteredIds: [],
+        gamesPlayed: 0,
+        unlockedRewards: [],
+        coinHistory: [
+          { text: 'Yangi akkaunt ochildi (0 Coin)', amount: '0', type: 'add', time: 'Boshlang\'ich' }
+        ]
+      };
+
+      window.db.users.push(newUser);
+      if (window.syncStudentToCloud) await window.syncStudentToCloud(newUser);
+      e.target.reset();
+      showToast(`🎉 Tabriklaymiz, ${fullName}! Akkaunt bulutga saqlandi (0 Coin).`, 'success');
+      enterAppAsStudent(username);
+    }
+
+    function handleUserLogin(e) {
+      e.preventDefault();
+      const usernameInput = document.getElementById('login-username').value.trim();
+      const passwordInput = document.getElementById('login-password').value;
+      const errEl = document.getElementById('login-error-msg');
+
+      if (usernameInput === 'husenxonov' && passwordInput === 'husenxonov1234') {
+        e.target.reset();
+        enterAppAsAdmin();
+        showToast('🛡️ Xush kelibsiz, Admin husenxonov!', 'success');
+        return;
+      }
+
+      const student = window.db.users.find(
+        u => u.username.toLowerCase() === usernameInput.toLowerCase() && u.password === passwordInput
+      );
+
+      if (student) {
+        e.target.reset();
+        enterAppAsStudent(student.username);
+        showToast(`👋 Xush kelibsiz, ${student.fullName}! Balansingiz: ${student.coins} Coin`, 'success');
+      } else {
+        const card = document.getElementById('auth-card');
+        card.classList.remove('animate-shake');
+        void card.offsetWidth;
+        card.classList.add('animate-shake');
+        errEl.textContent = '❌ Login yoki parol noto\'g\'ri!';
+        errEl.classList.remove('hidden');
+      }
+    }
+
+    function enterAppAsStudent(username) {
+      window.session.currentUser = username;
+      localStorage.setItem('linguamaster_active_session', username);
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('main-app-shell').classList.remove('hidden');
+      document.getElementById('sidebar-admin-btn').classList.add('hidden');
+      window.refreshCurrentUserUI();
+      renderHomeNews();
+      switchTab('home');
+    }
+
+    function enterAppAsAdmin() {
+      window.session.currentUser = 'ADMIN';
+      localStorage.setItem('linguamaster_active_session', 'ADMIN');
+      document.getElementById('auth-screen').classList.add('hidden');
+      document.getElementById('main-app-shell').classList.remove('hidden');
+      document.getElementById('sidebar-admin-btn').classList.remove('hidden');
+      window.refreshCurrentUserUI();
+      renderHomeNews();
+      switchTab('admin');
+    }
+
+    function logoutCurrentUser() {
+      if (window.session.activeGameInterval) {
+        clearInterval(window.session.activeGameInterval);
+        window.session.activeGameInterval = null;
+      }
+      window.session.currentUser = null;
+      localStorage.removeItem('linguamaster_active_session');
+      document.getElementById('main-app-shell').classList.add('hidden');
+      document.getElementById('auth-screen').classList.remove('hidden');
+      authMascotReset();
+      showToast('Akkauntdan chiqildi.', 'info');
+    }
+
+    window.refreshCurrentUserUI = function() {
+      if (!window.session.currentUser) return;
+      document.getElementById('stat-total-words').textContent = window.db.words.length;
+
+      if (window.session.currentUser === 'ADMIN') {
+        document.getElementById('sidebar-avatar').textContent = '🛡️';
+        document.getElementById('sidebar-fullname').textContent = 'Admin Husenxonov';
+        document.getElementById('sidebar-username').textContent = '@husenxonov';
+        document.getElementById('sidebar-role-badge').textContent = 'Administrator';
+        document.getElementById('sidebar-coin-count').textContent = '∞';
+        document.getElementById('mobile-coin-count').textContent = 'Admin';
+        document.getElementById('hero-user-name').textContent = 'Admin Husenxonov';
+        document.getElementById('stat-home-coins').textContent = '∞';
+        return;
+      }
+
+      const st = getLoggedInStudent();
+      if (!st) return;
+
+      document.getElementById('sidebar-avatar').textContent = st.avatar || '🎓';
+      document.getElementById('sidebar-fullname').textContent = st.fullName;
+      document.getElementById('sidebar-username').textContent = `@${st.username}`;
+      document.getElementById('sidebar-role-badge').textContent = 'O\'quvchi';
+      document.getElementById('sidebar-coin-count').textContent = st.coins;
+      document.getElementById('mobile-coin-count').textContent = st.coins;
+      document.getElementById('hero-user-name').textContent = st.fullName;
+
+      document.getElementById('stat-home-coins').textContent = st.coins;
+      document.getElementById('stat-mastered-words').textContent = st.masteredIds.length;
+      document.getElementById('stat-games-played').textContent = st.gamesPlayed;
+
+      const walletDisp = document.getElementById('wallet-coin-display');
+      if (walletDisp) walletDisp.textContent = st.coins;
+
+      let rank = '🌱 Yangi O\'quvchi';
+      if (st.coins >= 700) rank = '👑 VIP Grandmaster';
+      else if (st.coins >= 350) rank = '🥇 Oltin Akademik';
+      else if (st.coins >= 150) rank = '🥈 Kumush Poliglot';
+      else if (st.coins >= 50) rank = '🥉 Bronza Bilimdon';
+      const rankEl = document.getElementById('student-rank-badge');
+      if (rankEl) rankEl.textContent = rank;
+    };
+
+    // ==================== 6. NAVIGATION & SIDEBAR ====================
+    function toggleMobileSidebar() {
+      const sb = document.getElementById('left-sidebar');
+      const bd = document.getElementById('mobile-sidebar-backdrop');
+      sb.classList.toggle('-translate-x-full');
+      bd.classList.toggle('hidden');
+    }
+
+    function switchTab(tabName) {
+      if (window.session.activeGameInterval) {
+        clearInterval(window.session.activeGameInterval);
+        window.session.activeGameInterval = null;
+      }
+
+      document.querySelectorAll('.tab-section').forEach(sec => sec.classList.add('hidden'));
+      const target = document.getElementById(`tab-${tabName}`);
+      if (target) target.classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        if (btn.dataset.tab === 'admin') return;
+        if (btn.dataset.tab === tabName) {
+          btn.className = 'nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 bg-indigo-600 text-white shadow-sm';
+        } else {
+          btn.className = 'nav-btn w-full px-4 py-3 rounded-2xl text-sm font-bold transition flex items-center gap-3 text-slate-700 hover:bg-indigo-50';
+        }
+      });
+
+      document.getElementById('left-sidebar').classList.add('-translate-x-full');
+      document.getElementById('mobile-sidebar-backdrop').classList.add('hidden');
+
+      if (tabName === 'vocab') renderVocabulary();
+      if (tabName === 'flashcards') initFlashcards();
+      if (tabName === 'games') selectGameMode(window.session.activeGameMode);
+      if (tabName === 'coins') renderCoinsTab();
+      if (tabName === 'profile') renderProfilePage();
+      if (tabName === 'admin' && window.session.currentUser === 'ADMIN') window.renderAdminDashboard();
+    }
+
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      const colors = {
+        success: 'bg-emerald-600 text-white',
+        error: 'bg-rose-600 text-white',
+        coin: 'bg-amber-400 text-slate-950 border-2 border-amber-600',
+        info: 'bg-indigo-600 text-white'
+      };
+      toast.className = `${colors[type] || colors.info} px-4 py-3 rounded-2xl shadow-xl font-bold text-sm pointer-events-auto transition-all duration-300`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        setTimeout(() => toast.remove(), 300);
+      }, 2800);
+    }
+
+    async function awardStudentCoins(amount, reason) {
+      const st = getLoggedInStudent();
+      if (!st) {
+        showToast(`Admin sinovi: ${reason}`, 'info');
+        return;
+      }
+      st.coins = Math.max(0, st.coins + amount);
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      st.coinHistory.unshift({
+        text: reason,
+        amount: amount >= 0 ? `+${amount}` : `${amount}`,
+        type: amount >= 0 ? 'add' : 'sub',
+        time: timeStr
+      });
+      if (window.syncStudentToCloud) await window.syncStudentToCloud(st);
+      window.refreshCurrentUserUI();
+      if (amount > 0) {
+        showToast(`🪙 +${amount} Coin qo'shildi! (${reason})`, 'coin');
+      }
+    }
+
+    // ==================== 7. PROFILE SETTINGS ====================
+    function renderProfilePage() {
+      if (window.session.currentUser === 'ADMIN') {
+        document.getElementById('profile-page-avatar').textContent = '🛡️';
+        document.getElementById('profile-page-fullname').textContent = 'Admin Husenxonov';
+        document.getElementById('profile-page-username').textContent = '@husenxonov (Administrator)';
+        document.getElementById('profile-page-coins').textContent = 'Cheksiz';
+        document.getElementById('profile-page-mastered').textContent = window.db.words.length;
+        document.getElementById('edit-profile-fullname').value = 'Admin Husenxonov';
+        document.getElementById('edit-profile-username').value = 'husenxonov';
+        document.getElementById('edit-profile-password').value = 'husenxonov1234';
+        return;
+      }
+
+      const st = getLoggedInStudent();
+      if (!st) return;
+
+      document.getElementById('profile-page-avatar').textContent = st.avatar || '🎓';
+      document.getElementById('profile-page-fullname').textContent = st.fullName;
+      document.getElementById('profile-page-username').textContent = `@${st.username}`;
+      document.getElementById('profile-page-coins').textContent = st.coins;
+      document.getElementById('profile-page-mastered').textContent = st.masteredIds.length;
+
+      document.getElementById('edit-profile-fullname').value = st.fullName;
+      document.getElementById('edit-profile-username').value = st.username;
+      document.getElementById('edit-profile-password').value = st.password;
+
+      document.getElementById('avatar-selector-row').innerHTML = AVATAR_CHOICES.map(av => `
+        <button
+          type="button"
+          onclick="changeStudentAvatar('${av}')"
+          class="w-11 h-11 rounded-2xl text-2xl flex items-center justify-center border-2 transition ${
+            st.avatar === av ? 'border-indigo-600 bg-indigo-50 scale-110' : 'border-slate-200 hover:border-indigo-300'
+          }"
+        >
+          ${av}
+        </button>
+      `).join('');
+    }
+
+    async function changeStudentAvatar(av) {
+      const st = getLoggedInStudent();
+      if (!st) return;
+      st.avatar = av;
+      if (window.syncStudentToCloud) await window.syncStudentToCloud(st);
+      window.refreshCurrentUserUI();
+      renderProfilePage();
+      showToast('✨ Avatar bulutga saqlandi!', 'success');
+    }
+
+    async function saveProfileSettings(e) {
+      e.preventDefault();
+      if (window.session.currentUser === 'ADMIN') return;
+      const st = getLoggedInStudent();
+      if (!st) return;
+
+      const newFullName = document.getElementById('edit-profile-fullname').value.trim();
+      const newUsername = document.getElementById('edit-profile-username').value.trim().toLowerCase();
+      const newPassword = document.getElementById('edit-profile-password').value;
+
+      if (newUsername !== st.username && (newUsername === 'husenxonov' || window.db.users.some(u => u.username === newUsername))) {
+        showToast('❌ Bu login band! Boshqa login kiriting.', 'error');
+        return;
+      }
+
+      st.fullName = newFullName;
+      st.username = newUsername;
+      st.password = newPassword;
+      window.session.currentUser = newUsername;
+      localStorage.setItem('linguamaster_active_session', newUsername);
+      if (window.syncStudentToCloud) await window.syncStudentToCloud(st);
+      window.refreshCurrentUserUI();
+      renderProfilePage();
+      showToast('✅ Profil ma\'lumotlari bulutga saqlandi!', 'success');
+    }
+
+    // ==================== 8. MULTI-LANGUAGE TEXT-TO-SPEECH (EN + RU + UZ) ====================
+    let availableVoices = [];
+    function loadVoices() {
+      if ('speechSynthesis' in window) {
+        availableVoices = window.speechSynthesis.getVoices();
+      }
+    }
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    function prepareUzbekPhonetic(text) {
+      return text
+        .replace(/o['‘’`ʻ]/gi, 'o')
+        .replace(/g['‘’`ʻ]/gi, 'g')
+        .replace(/sh/gi, 'ş')
+        .replace(/ch/gi, 'ç')
+        .replace(/['‘’`ʻ]/g, '');
+    }
+
+    function speakText(text, lang = 'EN', onEnd = null) {
+      if (!('speechSynthesis' in window)) return;
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance();
+      if (lang === 'EN') {
+        utter.text = text;
+        utter.lang = 'en-US';
+        utter.rate = 0.92;
+        const v = availableVoices.find(voice => voice.lang.includes('en-US') || voice.lang.includes('en-GB'));
+        if (v) utter.voice = v;
+      } else if (lang === 'RU') {
+        utter.text = text;
+        utter.lang = 'ru-RU';
+        utter.rate = 0.92;
+        const v = availableVoices.find(voice => voice.lang.toLowerCase().includes('ru'));
+        if (v) utter.voice = v;
+      } else {
+        const uzV = availableVoices.find(voice => voice.lang.toLowerCase().includes('uz'));
+        const trV = availableVoices.find(voice => voice.lang.toLowerCase().includes('tr'));
+        if (uzV) {
+          utter.text = text;
+          utter.voice = uzV;
+          utter.lang = 'uz-UZ';
+        } else if (trV) {
+          utter.text = prepareUzbekPhonetic(text);
+          utter.voice = trV;
+          utter.lang = 'tr-TR';
+        } else {
+          utter.text = prepareUzbekPhonetic(text);
+          utter.lang = 'uz-UZ';
+        }
+        utter.rate = 0.90;
+      }
+      utter.onend = () => { if (onEnd) onEnd(); };
+      utter.onerror = () => { if (onEnd) onEnd(); };
+      window.speechSynthesis.speak(utter);
+    }
+
+    function speakWordById(id, mode) {
+      const w = window.db.words.find(item => item.id === id);
+      if (!w) return;
+      const cleanForeign = w.word.replace(/\s*#\d+$/, '');
+      if (mode === 'target') {
+        speakText(`${cleanForeign}. ${w.exForeign}`, w.lang);
+      } else if (mode === 'uz') {
+        speakText(`${w.uz}. ${w.exUz}`, 'UZ');
+      } else {
+        speakText(`${cleanForeign}. ${w.exForeign}`, w.lang, () => {
+          setTimeout(() => speakText(`${w.uz}. ${w.exUz}`, 'UZ'), 300);
+        });
+      }
+    }
+
+    // ==================== 9. VOCABULARY SECTION (EN & RU) ====================
+    function selectVocabLevel(level) {
+      window.session.currentVocabLevel = level;
+      window.session.vocabPage = 1;
+      renderVocabulary();
+    }
+
+    function resetVocabPaginationAndRender() {
+      window.session.vocabPage = 1;
+      renderVocabulary();
+    }
+
+    function renderVocabulary() {
+      const lang = window.session.courseLang;
+      const levels = ['A1', 'A2', 'B1', 'B2', 'C1', 'C2'];
+
+      document.getElementById('level-buttons-container').innerHTML = levels.map(lvl => {
+        const count = window.db.words.filter(w => w.lang === lang && w.level === lvl).length;
+        const active = window.session.currentVocabLevel === lvl;
+        return `
+          <button
+            onclick="selectVocabLevel('${lvl}')"
+            class="px-4 py-2.5 rounded-2xl font-black text-sm transition flex items-center gap-2 ${
+              active ? 'bg-indigo-600 text-white shadow-md scale-105' : 'bg-slate-100 hover:bg-indigo-50 text-slate-700'
+            }"
+          >
+            <span>${lvl}</span>
+            <span class="text-xs px-2 py-0.5 rounded-full ${active ? 'bg-white/25 text-white' : 'bg-white text-slate-600'}">${count}</span>
+          </button>
+        `;
+      }).join('');
+
+      const meta = LEVEL_META[window.session.currentVocabLevel];
+      document.getElementById('current-level-badge').textContent = `${lang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU'} • ${meta.badge}`;
+      document.getElementById('current-level-desc').textContent = meta.desc;
+
+      const query = (document.getElementById('vocab-search').value || '').toLowerCase().trim();
+      const filtered = window.db.words.filter(w => {
+        const matchLang = w.lang === lang;
+        const matchLvl = w.level === window.session.currentVocabLevel;
+        const matchQ = !query || w.word.toLowerCase().includes(query) || w.uz.toLowerCase().includes(query);
+        return matchLang && matchLvl && matchQ;
+      });
+
+      document.getElementById('vocab-count-label').textContent = filtered.length;
+
+      const totalPages = Math.max(1, Math.ceil(filtered.length / window.session.vocabPerPage));
+      if (window.session.vocabPage > totalPages) window.session.vocabPage = totalPages;
+      const startIdx = (window.session.vocabPage - 1) * window.session.vocabPerPage;
+      const pageItems = filtered.slice(startIdx, startIdx + window.session.vocabPerPage);
+
+      const st = getLoggedInStudent();
+      const masteredList = st ? st.masteredIds : [];
+      const flagBadge = lang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+
+      document.getElementById('vocab-grid').innerHTML = pageItems.map(w => {
+        const isMastered = masteredList.includes(w.id);
+        return `
+          <div class="rounded-3xl p-5 bg-white border-2 ${isMastered ? 'border-emerald-300' : 'border-slate-200'} hover:border-indigo-400 shadow-sm transition flex flex-col justify-between gap-3">
+            <div class="space-y-2.5">
+              <div class="flex items-start justify-between gap-2">
+                <div>
+                  <span class="inline-block text-[10px] font-black px-2 py-0.5 rounded bg-indigo-100 text-indigo-700">${flagBadge} • ${w.level}</span>
+                  <h3 class="text-xl font-black text-slate-900 mt-0.5">${w.word}</h3>
+                  <p class="text-xs text-slate-400 font-semibold">${w.ipa || ''}</p>
+                </div>
+                <button onclick="toggleStudentMasteredWord(${w.id})" class="px-2.5 py-1 rounded-xl text-xs font-extrabold ${isMastered ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 hover:bg-emerald-50 text-slate-600'}">
+                  ${isMastered ? '✅ Yodlangan' : '☆ Yodlash'}
+                </button>
+              </div>
+              <div class="bg-amber-50 border border-amber-200 rounded-2xl px-3.5 py-2">
+                <p class="text-[10px] font-bold text-amber-700 uppercase">O'zbekcha:</p>
+                <p class="text-base font-extrabold text-slate-900">${w.uz}</p>
+              </div>
+              <div class="bg-slate-50 border border-slate-200/80 rounded-2xl p-3 space-y-1">
+                <p class="text-xs font-bold text-indigo-900">"${w.exForeign}"</p>
+                <p class="text-xs text-slate-600">"${w.exUz}"</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-3 gap-1.5">
+              <button onclick="speakWordById(${w.id}, 'target')" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 rounded-xl text-xs">${flagBadge}</button>
+              <button onclick="speakWordById(${w.id}, 'uz')" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2 rounded-xl text-xs">🇺🇿 UZ</button>
+              <button onclick="speakWordById(${w.id}, 'both')" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 rounded-xl text-xs">🔊 Ikkalasi</button>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      let pagHtml = '';
+      for (let p = 1; p <= totalPages; p++) {
+        pagHtml += `
+          <button
+            onclick="window.session.vocabPage=${p}; renderVocabulary(); window.scrollTo({top: 0, behavior: 'smooth'});"
+            class="w-9 h-9 rounded-xl font-extrabold text-xs transition ${
+              p === window.session.vocabPage ? 'bg-indigo-600 text-white shadow' : 'bg-slate-100 hover:bg-indigo-100 text-slate-700'
+            }"
+          >
+            ${p}
+          </button>
+        `;
+      }
+      document.getElementById('vocab-pagination').innerHTML = pagHtml;
+    }
+
+    async function toggleStudentMasteredWord(id) {
+      const st = getLoggedInStudent();
+      if (!st) return;
+      if (st.masteredIds.includes(id)) {
+        st.masteredIds = st.masteredIds.filter(i => i !== id);
+        if (window.syncStudentToCloud) await window.syncStudentToCloud(st);
+        window.refreshCurrentUserUI();
+        renderVocabulary();
+      } else {
+        st.masteredIds.push(id);
+        await awardStudentCoins(3, 'So\'z yodlandi');
+        renderVocabulary();
+      }
+    }
+
+    // ==================== 10. COLORFUL 3D FLASHCARDS ====================
+    function initFlashcards() {
+      const lvl = document.getElementById('fc-level-select').value;
+      const lang = window.session.courseLang;
+      window.session.fcList = window.db.words.filter(w => w.lang === lang && w.level === lvl);
+      window.session.fcIndex = 0;
+      window.session.fcFlipped = false;
+      renderFlashcard();
+    }
+
+    function shuffleFlashcards() {
+      window.session.fcList.sort(() => Math.random() - 0.5);
+      window.session.fcIndex = 0;
+      window.session.fcFlipped = false;
+      renderFlashcard();
+      showToast('🔀 Rangli Flashcardlar aralashtirildi!', 'info');
+    }
+
+    function renderFlashcard() {
+      if (window.session.fcList.length === 0) return;
+      const card = window.session.fcList[window.session.fcIndex];
+      const inner = document.getElementById('flashcard-inner');
+      inner.classList.toggle('rotate-y-180', window.session.fcFlipped);
+
+      const frontEl = document.getElementById('fc-front-card');
+      const grad = FLASHCARD_GRADIENTS[card.level] || FLASHCARD_GRADIENTS.A1;
+      frontEl.className = `absolute inset-0 backface-hidden rounded-3xl bg-gradient-to-br ${grad} text-white p-6 sm:p-10 flex flex-col items-center justify-between shadow-2xl border-4 border-white/40 overflow-hidden`;
+
+      const flagLabel = card.lang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+      document.getElementById('fc-front-level').textContent = `${flagLabel} • ${card.level}`;
+      document.getElementById('fc-en-word').textContent = card.word;
+      document.getElementById('fc-phonetic').textContent = card.ipa || '';
+      document.getElementById('fc-uz-word').textContent = card.uz;
+      document.getElementById('fc-en-sentence').textContent = `"${card.exForeign}"`;
+      document.getElementById('fc-uz-sentence').textContent = `"${card.exUz}"`;
+
+      document.getElementById('fc-back-target-btn').textContent = flagLabel;
+
+      const st = getLoggedInStudent();
+      document.getElementById('fc-progress-text').textContent = `${window.session.fcIndex + 1} / ${window.session.fcList.length}`;
+      document.getElementById('fc-known-count').textContent = st ? st.masteredIds.length : 0;
+      document.getElementById('fc-progress-bar').style.width = `${((window.session.fcIndex + 1) / window.session.fcList.length) * 100}%`;
+    }
+
+    function flipFlashcard() {
+      window.session.fcFlipped = !window.session.fcFlipped;
+      renderFlashcard();
+    }
+
+    function nextFlashcard() {
+      window.session.fcFlipped = false;
+      window.session.fcIndex = (window.session.fcIndex + 1) % window.session.fcList.length;
+      renderFlashcard();
+    }
+
+    function prevFlashcard() {
+      window.session.fcFlipped = false;
+      window.session.fcIndex = (window.session.fcIndex - 1 + window.session.fcList.length) % window.session.fcList.length;
+      renderFlashcard();
+    }
+
+    async function markFlashcardKnown() {
+      const card = window.session.fcList[window.session.fcIndex];
+      const st = getLoggedInStudent();
+      if (st && !st.masteredIds.includes(card.id)) {
+        st.masteredIds.push(card.id);
+        await awardStudentCoins(5, `3D Flashcard (${card.lang}): ${card.word}`);
+      }
+      nextFlashcard();
+    }
+
+    function speakCurrentFlashcard(mode) {
+      const card = window.session.fcList[window.session.fcIndex];
+      if (card) speakWordById(card.id, mode);
+    }
+
+    // ==================== 11. SEPARATE COLORFUL GAMES FOR ENGLISH & RUSSIAN ====================
+    function getGamePool() {
+      const lang = window.session.courseLang;
+      const lvl = document.getElementById('game-level-select').value;
+      const pool = window.db.words.filter(w => w.lang === lang && (lvl === 'ALL' || w.level === lvl));
+      return pool.length >= 4 ? pool : window.db.words.filter(w => w.lang === lang);
+    }
+
+    async function incrementGamesPlayed() {
+      const st = getLoggedInStudent();
+      if (st) {
+        st.gamesPlayed++;
+        if (window.syncStudentToCloud) await window.syncStudentToCloud(st);
+        window.refreshCurrentUserUI();
+      }
+    }
+
+    function selectGameMode(mode) {
+      if (window.session.activeGameInterval) {
+        clearInterval(window.session.activeGameInterval);
+        window.session.activeGameInterval = null;
+      }
+      window.session.activeGameMode = mode;
+      ['shooter', 'racer', 'quiz', 'match', 'scramble', 'truefalse'].forEach(m => {
+        const el = document.getElementById(`game-tab-${m}`);
+        if (!el) return;
+        if (m === mode) {
+          el.classList.add('ring-4', 'ring-slate-900', 'scale-[1.02]');
+        } else {
+          el.classList.remove('ring-4', 'ring-slate-900', 'scale-[1.02]');
+        }
+      });
+      restartActiveGame();
+    }
+
+    function restartActiveGame() {
+      if (window.session.activeGameInterval) {
+        clearInterval(window.session.activeGameInterval);
+        window.session.activeGameInterval = null;
+      }
+      const mode = window.session.activeGameMode;
+      if (mode === 'shooter') startSpaceShooterGame();
+      else if (mode === 'racer') startTurboRacerGame();
+      else if (mode === 'quiz') startQuizGame();
+      else if (mode === 'match') startMatchGame();
+      else if (mode === 'scramble') startScrambleGame();
+      else if (mode === 'truefalse') startTrueFalseGame();
+    }
+
+    // --- GAME 1: SPACE WORD SHOOTER ---
+    function startSpaceShooterGame() {
+      const pool = getGamePool();
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const targetWord = shuffled[0];
+      const meteorsData = shuffled.slice(0, 3).sort(() => Math.random() - 0.5);
+      const langFlag = window.session.courseLang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+
+      const arena = document.getElementById('game-arena');
+      arena.innerHTML = `
+        <div class="space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="px-3 py-1 rounded-xl border-2 border-black font-black text-xs bg-blue-100">🚀 KOSMIK OVCHI (${langFlag})</span>
+            <span class="text-sm font-extrabold">Nishon so'z: <strong class="text-lg underline">${targetWord.word.replace(/\s*#\d+$/, '')}</strong></span>
+          </div>
+
+          <div class="w-full rounded-2xl border-2 border-black overflow-hidden bg-white">
+            <canvas id="shooter-canvas" class="w-full h-64 block bg-white"></canvas>
+          </div>
+
+          <div class="flex flex-wrap items-center justify-center gap-3">
+            <button onclick="moveShooterLane(0)" class="game-option-btn px-5 py-2.5 rounded-xl font-black text-sm">⬅️ Chap yo'lak</button>
+            <button onclick="fireShooterLaser()" class="game-option-btn px-6 py-2.5 rounded-xl font-black text-sm bg-amber-300">🔥 LAZER OTISH</button>
+            <button onclick="moveShooterLane(2)" class="game-option-btn px-5 py-2.5 rounded-xl font-black text-sm">O'ng yo'lak ➡️</button>
+          </div>
+        </div>
+      `;
+
+      const canvas = document.getElementById('shooter-canvas');
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth || 640;
+      canvas.height = 256;
+
+      let shipLane = 1;
+      let meteorY = 35;
+      let laserY = null;
+      let laserLane = 1;
+      let gameOver = false;
+
+      window.moveShooterLane = (dir) => {
+        if (dir === 0) shipLane = Math.max(0, shipLane - 1);
+        else shipLane = Math.min(2, shipLane + 1);
+      };
+
+      window.fireShooterLaser = () => {
+        if (laserY === null && !gameOver) {
+          laserY = canvas.height - 55;
+          laserLane = shipLane;
+        }
+      };
+
+      canvas.onclick = (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const clickX = e.clientX - rect.left;
+        const laneWidth = canvas.width / 3;
+        shipLane = Math.min(2, Math.max(0, Math.floor(clickX / laneWidth)));
+        window.fireShooterLaser();
+      };
+
+      const meteorColors = ['#dbeafe', '#fce7f3', '#fef3c7'];
+
+      window.session.activeGameInterval = setInterval(() => {
+        if (gameOver) return;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        const laneW = canvas.width / 3;
+        ctx.strokeStyle = '#cbd5e1';
+        ctx.lineWidth = 2;
+        [1, 2].forEach(i => {
+          ctx.beginPath();
+          ctx.moveTo(laneW * i, 0);
+          ctx.lineTo(laneW * i, canvas.height);
+          ctx.stroke();
+        });
+
+        meteorY += 0.9;
+        meteorsData.forEach((m, idx) => {
+          const cx = laneW * idx + laneW / 2;
+          ctx.fillStyle = meteorColors[idx % 3];
+          ctx.strokeStyle = '#000000';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.roundRect(cx - laneW * 0.42, meteorY - 20, laneW * 0.84, 40, 12);
+          ctx.fill();
+          ctx.stroke();
+
+          ctx.fillStyle = '#000000';
+          ctx.font = 'bold 13px Inter, sans-serif';
+          ctx.textAlign = 'center';
+          const shortUz = m.uz.split('(')[0].trim();
+          ctx.fillText(shortUz, cx, meteorY + 5);
+        });
+
+        if (laserY !== null) {
+          laserY -= 14;
+          const lx = laneW * laserLane + laneW / 2;
+          ctx.fillStyle = '#dc2626';
+          ctx.fillRect(lx - 4, laserY, 8, 24);
+
+          if (laserY <= meteorY + 20) {
+            const hitItem = meteorsData[laserLane];
+            laserY = null;
+            gameOver = true;
+            clearInterval(window.session.activeGameInterval);
+            if (hitItem && hitItem.id === targetWord.id) {
+              incrementGamesPlayed();
+              awardStudentCoins(15, `Kosmik Ovchi (${window.session.courseLang}): ${targetWord.word}`);
+              speakWordById(targetWord.id, 'both');
+            } else {
+              showToast(`❌ Xato meteor! To'g'risi: "${targetWord.uz}"`, 'error');
+            }
+            setTimeout(startSpaceShooterGame, 1300);
+            return;
+          }
+        }
+
+        const sx = laneW * shipLane + laneW / 2;
+        const sy = canvas.height - 32;
+        ctx.fillStyle = '#4f46e5';
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(sx, sy - 20);
+        ctx.lineTo(sx - 22, sy + 16);
+        ctx.lineTo(sx + 22, sy + 16);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        if (meteorY > canvas.height - 50) {
+          gameOver = true;
+          clearInterval(window.session.activeGameInterval);
+          showToast(`⏰ Vaqt tugadi! To'g'ri javob: "${targetWord.uz}"`, 'error');
+          setTimeout(startSpaceShooterGame, 1200);
+        }
+      }, 30);
+    }
+
+    // --- GAME 2: TURBO WORD RACER ---
+    let racerPlayerProgress = 10;
+    let racerBotProgress = 10;
+
+    function startTurboRacerGame() {
+      racerPlayerProgress = 10;
+      racerBotProgress = 10;
+      renderTurboRacerRound();
+    }
+
+    function renderTurboRacerRound() {
+      const pool = getGamePool();
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      const qWord = shuffled[0];
+      const opts = shuffled.slice(0, 4).sort(() => Math.random() - 0.5);
+      const langFlag = window.session.courseLang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+
+      document.getElementById('game-arena').innerHTML = `
+        <div class="space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-xl border-2 border-black font-black text-xs bg-rose-100">🏎️ TURBO POYGA (${langFlag})</span>
+            <span class="text-xs font-extrabold">Siz: ${racerPlayerProgress}% • Raqib: ${racerBotProgress}%</span>
+          </div>
+
+          <div class="w-full rounded-2xl border-2 border-black p-3 bg-white">
+            <canvas id="racer-canvas" class="w-full h-32 block bg-white"></canvas>
+          </div>
+
+          <div class="text-center py-1">
+            <p class="text-xs font-bold uppercase">Tezlik oshirish uchun tarjimani toping:</p>
+            <h3 class="text-3xl font-black mt-0.5">${qWord.word.replace(/\s*#\d+$/, '')}</h3>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-2xl mx-auto">
+            ${opts.map(o => `
+              <button onclick="handleRacerAnswer(${o.id === qWord.id})" class="game-option-btn p-3.5 rounded-2xl font-extrabold text-sm">
+                ${o.uz.split('(')[0].trim()}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+      drawRacerTrack();
+    }
+
+    function drawRacerTrack() {
+      const canvas = document.getElementById('racer-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      canvas.width = canvas.offsetWidth || 640;
+      canvas.height = 128;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const trackStart = 30;
+      const trackEnd = canvas.width - 50;
+      const span = trackEnd - trackStart;
+
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 3;
+      ctx.setLineDash([6, 6]);
+      ctx.beginPath();
+      ctx.moveTo(trackEnd, 10);
+      ctx.lineTo(trackEnd, 118);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.beginPath();
+      ctx.moveTo(trackStart, 64);
+      ctx.lineTo(trackEnd, 64);
+      ctx.stroke();
+
+      const px = trackStart + (span * Math.min(100, racerPlayerProgress)) / 100;
+      ctx.font = '28px sans-serif';
+      ctx.fillText('🏎️', px - 15, 44);
+      ctx.font = 'bold 11px Inter';
+      ctx.fillStyle = '#000000';
+      ctx.fillText('SIZ', px - 10, 58);
+
+      const bx = trackStart + (span * Math.min(100, racerBotProgress)) / 100;
+      ctx.font = '28px sans-serif';
+      ctx.fillText('🚙', bx - 15, 102);
+      ctx.font = 'bold 11px Inter';
+      ctx.fillText('BOT', bx - 10, 118);
+    }
+
+    function handleRacerAnswer(isCorrect) {
+      if (isCorrect) {
+        racerPlayerProgress += 30;
+        racerBotProgress += 12;
+      } else {
+        racerBotProgress += 28;
+        showToast('❌ Noto\'g\'ri! Raqib oldinga o\'tib ketdi!', 'error');
+      }
+
+      if (racerPlayerProgress >= 100) {
+        drawRacerTrack();
+        incrementGamesPlayed();
+        awardStudentCoins(20, `Turbo Poyga (${window.session.courseLang}) g'alabasi!`);
+        setTimeout(startTurboRacerGame, 1300);
+      } else if (racerBotProgress >= 100) {
+        drawRacerTrack();
+        showToast('🏁 Raqib marraga birinchi yetdi! Qayta urining.', 'error');
+        setTimeout(startTurboRacerGame, 1300);
+      } else {
+        renderTurboRacerRound();
+      }
+    }
+
+    // --- GAME 3: QUIZ ---
+    let currentQuizWord = null;
+    function startQuizGame() {
+      const pool = getGamePool();
+      const shuffled = [...pool].sort(() => Math.random() - 0.5);
+      currentQuizWord = shuffled[0];
+      const options = shuffled.slice(0, 4).sort(() => Math.random() - 0.5);
+      const langFlag = window.session.courseLang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+
+      document.getElementById('game-arena').innerHTML = `
+        <div class="space-y-6">
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-xl border-2 border-black font-black text-xs bg-emerald-100">🎯 SO'Z TOPISH (${langFlag} • ${currentQuizWord.level})</span>
+            <button onclick="speakWordById(${currentQuizWord.id}, 'target')" class="game-option-btn px-4 py-2 rounded-xl font-extrabold text-xs">🔊 Eshitish</button>
+          </div>
+          <div class="text-center py-4 space-y-1">
+            <h3 class="text-4xl font-black">${currentQuizWord.word.replace(/\s*#\d+$/, '')}</h3>
+            <p class="text-sm font-semibold">${currentQuizWord.ipa || ''}</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3.5 max-w-2xl mx-auto">
+            ${options.map(opt => `
+              <button onclick="checkQuizAnswer(this, ${opt.id === currentQuizWord.id})" class="game-option-btn p-4 rounded-2xl font-extrabold text-base">
+                ${opt.uz.split('(')[0].trim()}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function checkQuizAnswer(btn, isCorrect) {
+      document.querySelectorAll('#game-arena .game-option-btn').forEach(b => b.disabled = true);
+      if (isCorrect) {
+        btn.classList.add('game-option-correct');
+        incrementGamesPlayed();
+        awardStudentCoins(10, `Quiz (${window.session.courseLang}): ${currentQuizWord.word}`);
+      } else {
+        btn.classList.add('game-option-wrong');
+        showToast(`❌ To'g'ri javob: "${currentQuizWord.uz}"`, 'error');
+      }
+      setTimeout(startQuizGame, 1300);
+    }
+
+    // --- GAME 4: MATCH PAIRS ---
+    let matchSelEn = null, matchSelUz = null, matchDone = 0, matchTotal = 5;
+    function startMatchGame() {
+      const pool = getGamePool();
+      const pairs = [...pool].sort(() => Math.random() - 0.5).slice(0, 5);
+      matchTotal = pairs.length;
+      matchDone = 0;
+      matchSelEn = null;
+      matchSelUz = null;
+      const langFlag = window.session.courseLang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+
+      const enList = [...pairs].sort(() => Math.random() - 0.5);
+      const uzList = [...pairs].sort(() => Math.random() - 0.5);
+
+      document.getElementById('game-arena').innerHTML = `
+        <div class="space-y-5">
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-xl border-2 border-black font-black text-xs bg-purple-100">🔗 JUFTLIKNI TOPISH (${langFlag})</span>
+            <span class="text-xs font-extrabold">Mos juftliklarni tanlang</span>
+          </div>
+          <div class="grid grid-cols-2 gap-4 max-w-3xl mx-auto">
+            <div class="space-y-2.5" id="match-en-col">
+              ${enList.map(w => `<button onclick="pickMatch(this,'en',${w.id})" class="game-option-btn w-full p-3.5 rounded-2xl font-extrabold text-sm">${w.word.replace(/\s*#\d+$/, '')}</button>`).join('')}
+            </div>
+            <div class="space-y-2.5" id="match-uz-col">
+              ${uzList.map(w => `<button onclick="pickMatch(this,'uz',${w.id})" class="game-option-btn w-full p-3.5 rounded-2xl font-extrabold text-sm">${w.uz.split('(')[0].trim()}</button>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function pickMatch(btn, side, id) {
+      if (btn.disabled) return;
+      if (side === 'en') {
+        document.querySelectorAll('#match-en-col button').forEach(b => b.classList.remove('game-option-selected'));
+        btn.classList.add('game-option-selected');
+        matchSelEn = { btn, id };
+      } else {
+        document.querySelectorAll('#match-uz-col button').forEach(b => b.classList.remove('game-option-selected'));
+        btn.classList.add('game-option-selected');
+        matchSelUz = { btn, id };
+      }
+
+      if (matchSelEn && matchSelUz) {
+        if (matchSelEn.id === matchSelUz.id) {
+          matchSelEn.btn.classList.add('game-option-correct');
+          matchSelUz.btn.classList.add('game-option-correct');
+          matchSelEn.btn.disabled = true;
+          matchSelUz.btn.disabled = true;
+          matchDone++;
+          matchSelEn = null;
+          matchSelUz = null;
+          if (matchDone === matchTotal) {
+            incrementGamesPlayed();
+            awardStudentCoins(15, `Juftlik o'yini (${window.session.courseLang})!`);
+            setTimeout(startMatchGame, 1100);
+          }
+        } else {
+          const a = matchSelEn.btn, b = matchSelUz.btn;
+          a.classList.add('game-option-wrong');
+          b.classList.add('game-option-wrong');
+          matchSelEn = null;
+          matchSelUz = null;
+          setTimeout(() => {
+            a.classList.remove('game-option-wrong', 'game-option-selected');
+            b.classList.remove('game-option-wrong', 'game-option-selected');
+          }, 450);
+        }
+      }
+    }
+
+    // --- GAME 5: WORD SCRAMBLE (SUPPORTS BOTH LATIN & CYRILLIC!) ---
+    let scrambleTarget = null, scrambleTyped = '';
+    function startScrambleGame() {
+      const pool = getGamePool().filter(w => {
+        const clean = w.word.replace(/\s*#\d+$/, '');
+        return clean.length >= 3 && clean.length <= 10 && /^[a-zA-Zа-яА-ЯёЁ]+$/.test(clean);
+      });
+      scrambleTarget = pool[Math.floor(Math.random() * pool.length)];
+      const cleanWord = scrambleTarget.word.replace(/\s*#\d+$/, '').toUpperCase();
+      scrambleTyped = '';
+      const letters = cleanWord.split('').sort(() => Math.random() - 0.5);
+      const langFlag = window.session.courseLang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+
+      document.getElementById('game-arena').innerHTML = `
+        <div class="space-y-5 text-center max-w-xl mx-auto">
+          <span class="px-3 py-1 rounded-xl border-2 border-black font-black text-xs bg-amber-100">🔤 HARFLARNI TERISH (${langFlag})</span>
+          <h3 class="text-3xl font-black">"${scrambleTarget.uz.split('(')[0].trim()}"</h3>
+          <div id="scramble-box" class="min-h-[54px] border-2 border-black rounded-2xl p-3 flex items-center justify-center text-2xl font-black tracking-widest bg-amber-50">_ _ _</div>
+          <div class="flex flex-wrap justify-center gap-2">
+            ${letters.map(ch => `<button onclick="tapScrambleLetter(this,'${ch}','${cleanWord}')" class="game-option-btn w-11 h-11 rounded-xl font-black text-lg">${ch}</button>`).join('')}
+          </div>
+          <button onclick="startScrambleGame()" class="game-option-btn px-4 py-2 rounded-xl font-bold text-xs">🔄 Qayta terish</button>
+        </div>
+      `;
+    }
+
+    function tapScrambleLetter(btn, ch, target) {
+      btn.disabled = true;
+      btn.style.opacity = '0.3';
+      scrambleTyped += ch;
+      document.getElementById('scramble-box').textContent = scrambleTyped;
+      if (scrambleTyped.length === target.length) {
+        if (scrambleTyped === target) {
+          incrementGamesPlayed();
+          awardStudentCoins(15, `Harflar terildi (${window.session.courseLang}): ${target}`);
+          setTimeout(startScrambleGame, 1100);
+        } else {
+          showToast(`❌ To'g'risi: ${target}`, 'error');
+          setTimeout(startScrambleGame, 1200);
+        }
+      }
+    }
+
+    // --- GAME 6: SPEED TRUE / FALSE ---
+    let tfItem = null, tfTruth = true;
+    function startTrueFalseGame() {
+      const pool = getGamePool();
+      const sh = [...pool].sort(() => Math.random() - 0.5);
+      tfItem = sh[0];
+      tfTruth = Math.random() > 0.45;
+      const shownUz = tfTruth ? tfItem.uz : sh[1].uz;
+      const langFlag = window.session.courseLang === 'EN' ? '🇬🇧 EN' : '🇷🇺 RU';
+
+      document.getElementById('game-arena').innerHTML = `
+        <div class="space-y-6 text-center max-w-xl mx-auto">
+          <span class="px-3 py-1 rounded-xl border-2 border-black font-black text-xs bg-cyan-100">⚡ TEZKOR TO'G'RI / NOTO'G'RI (${langFlag})</span>
+          <div class="p-6 rounded-3xl border-2 border-black space-y-2 bg-cyan-50/40">
+            <h3 class="text-3xl font-black">${tfItem.word.replace(/\s*#\d+$/, '')}</h3>
+            <p class="font-black">=</p>
+            <h4 class="text-2xl font-black">${shownUz.split('(')[0].trim()}</h4>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <button onclick="checkTrueFalse(true)" class="game-option-btn py-4 rounded-2xl font-black text-base">✅ TO'G'RI</button>
+            <button onclick="checkTrueFalse(false)" class="game-option-btn py-4 rounded-2xl font-black text-base">❌ NOTO'G'RI</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function checkTrueFalse(ans) {
+      if (ans === tfTruth) {
+        incrementGamesPlayed();
+        awardStudentCoins(8, `Tezkor javob (${window.session.courseLang}): ${tfItem.word}`);
+      } else {
+        showToast(`❌ Xato! "${tfItem.word}" = "${tfItem.uz}"`, 'error');
+      }
+      startTrueFalseGame();
+    }
+
+    // ==================== 12. COINS STORE & NEWS ====================
+    function renderCoinsTab() {
+      window.refreshCurrentUserUI();
+      const st = getLoggedInStudent();
+      const ownedList = st ? st.unlockedRewards : [];
+      const history = st ? st.coinHistory : [];
+
+      document.getElementById('rewards-store-grid').innerHTML = REWARD_ITEMS.map(item => {
+        const owned = ownedList.includes(item.id);
+        return `
+          <div class="rounded-2xl p-5 border-2 ${owned ? 'border-emerald-400 bg-emerald-50' : 'border-slate-200 bg-slate-50'} flex flex-col justify-between gap-3">
+            <div>
+              <div class="flex items-center justify-between gap-2">
+                <h4 class="font-black text-slate-900 text-sm">${item.title}</h4>
+                <span class="bg-amber-400 text-slate-950 font-black text-xs px-2.5 py-1 rounded-lg">🪙 ${item.cost}</span>
+              </div>
+              <p class="text-xs text-slate-600 mt-2">${item.desc}</p>
+            </div>
+            <button onclick="buyStudentReward('${item.id}', ${item.cost}, '${item.title.replace(/'/g, "\\'")}')" ${owned ? 'disabled' : ''} class="w-full py-2.5 rounded-xl font-extrabold text-xs ${owned ? 'bg-emerald-600 text-white' : 'bg-slate-900 hover:bg-indigo-600 text-white'}">
+              ${owned ? '✅ Sotib olingan' : `Sotib olish (${item.cost} Coin)`}
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('coin-history-list').innerHTML = history.map(h => `
+        <div class="flex items-center justify-between p-3 rounded-xl bg-slate-50 border border-slate-100">
+          <div>
+            <p class="text-xs font-bold text-slate-800">${h.text}</p>
+            <p class="text-[11px] text-slate-400">${h.time}</p>
+          </div>
+          <span class="font-black text-sm ${h.type === 'add' ? 'text-emerald-600' : 'text-rose-600'}">${h.amount} 🪙</span>
+        </div>
+      `).join('');
+    }
+
+    async function buyStudentReward(id, cost, title) {
+      const st = getLoggedInStudent();
+      if (!st) return;
+      if (st.coins < cost) {
+        showToast(`Coin yetarli emas! Yana ${cost - st.coins} Coin kerak.`, 'error');
+        return;
+      }
+      st.unlockedRewards.push(id);
+      await awardStudentCoins(-cost, `Mukofot: ${title}`);
+      renderCoinsTab();
+    }
+
+    window.renderHomeNews = function() {
+      document.getElementById('news-grid').innerHTML = window.db.news.map(n => `
+        <article class="bg-white rounded-3xl p-6 border border-slate-200 shadow-sm flex flex-col justify-between gap-4">
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-extrabold px-3 py-1 rounded-full bg-indigo-100 text-indigo-700">${n.tag}</span>
+              <span class="text-xs text-slate-400 font-medium">${n.date}</span>
+            </div>
+            <h3 class="text-lg font-black text-slate-900">${n.title}</h3>
+            <p class="text-sm text-slate-600">${n.body}</p>
+          </div>
+          <button onclick="speakText('${n.title.replace(/'/g, "\\'")}. ${n.body.replace(/'/g, "\\'")}', 'UZ')" class="self-start text-xs font-extrabold text-indigo-600 hover:underline">
+            🔊 Ovozli tinglash
+          </button>
+        </article>
+      `).join('');
+    };
+
+    // ==================== 13. ADMIN DASHBOARD ====================
+    window.renderAdminDashboard = function() {
+      const selectEl = document.getElementById('admin-student-select');
+      if (window.db.users.length === 0) {
+        selectEl.innerHTML = '<option value="">Hali o\'quvchi ro\'yxatdan o\'tmagan</option>';
+        document.getElementById('admin-student-balance').textContent = '0 Coin';
+      } else {
+        selectEl.innerHTML = window.db.users.map(u => `<option value="${u.username}">${u.fullName} (@${u.username}) — ${u.coins} Coin</option>`).join('');
+        updateAdminSelectedStudentInfo();
+      }
+
+      document.getElementById('admin-students-table').innerHTML = window.db.users.length === 0
+        ? '<p class="text-sm text-slate-500 col-span-full">Hozircha o\'quvchi akkauntlari yo\'q.</p>'
+        : window.db.users.map(u => `
+          <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <div>
+              <p class="font-black text-sm text-slate-900">${u.avatar || '🎓'} ${u.fullName}</p>
+              <p class="text-xs text-slate-500">@${u.username} • Parol: <span class="font-mono font-bold">${u.password}</span></p>
+            </div>
+            <span class="bg-amber-300 text-slate-950 font-black text-xs px-3 py-1 rounded-xl">🪙 ${u.coins}</span>
+          </div>
+        `).join('');
+    };
+
+    function updateAdminSelectedStudentInfo() {
+      const uname = document.getElementById('admin-student-select').value;
+      const st = window.db.users.find(u => u.username === uname);
+      document.getElementById('admin-student-balance').textContent = st ? `${st.coins} Coin` : '0 Coin';
+    }
+
+    async function adminModifyStudentCoins(action) {
+      const uname = document.getElementById('admin-student-select').value;
+      const st = window.db.users.find(u => u.username === uname);
+      if (!st) {
+        showToast('Avval o\'quvchi akkauntini tanlang!', 'error');
+        return;
+      }
+      const amt = parseInt(document.getElementById('admin-coin-amount').value, 10);
+      if (isNaN(amt) || amt <= 0) return;
+
+      const delta = action === 'add' ? amt : -amt;
+      st.coins = Math.max(0, st.coins + delta);
+      st.coinHistory.unshift({
+        text: action === 'add' ? 'Admin tomonidan qo\'shildi' : 'Admin tomonidan ayrildi',
+        amount: delta >= 0 ? `+${delta}` : `${delta}`,
+        type: delta >= 0 ? 'add' : 'sub',
+        time: 'Admin'
+      });
+      if (window.syncStudentToCloud) await window.syncStudentToCloud(st);
+      window.renderAdminDashboard();
+      showToast(`✅ ${st.fullName} hisobiga ${delta >= 0 ? '+' + delta : delta} Coin bulutda yangilandi!`, 'success');
+    }
+
+    async function adminAddWord(e) {
+      e.preventDefault();
+      const newW = {
+        id: Date.now(),
+        isCustom: true,
+        lang: document.getElementById('admin-word-lang').value,
+        level: document.getElementById('admin-word-level').value,
+        ipa: document.getElementById('admin-word-ipa').value.trim(),
+        word: document.getElementById('admin-word-en').value.trim(),
+        uz: document.getElementById('admin-word-uz').value.trim(),
+        exForeign: document.getElementById('admin-word-ex-en').value.trim(),
+        exUz: document.getElementById('admin-word-ex-uz').value.trim()
+      };
+      window.db.words.unshift(newW);
+      if (window.syncSharedContentToCloud) await window.syncSharedContentToCloud();
+      e.target.reset();
+      showToast(`✅ "${newW.word}" (${newW.lang} • ${newW.level}) bulutga qo'shildi!`, 'success');
+    }
+
+    async function adminAddNews(e) {
+      e.preventDefault();
+      window.db.news.unshift({
+        id: Date.now(),
+        tag: document.getElementById('admin-news-tag').value,
+        title: document.getElementById('admin-news-title').value.trim(),
+        body: document.getElementById('admin-news-body').value.trim(),
+        date: 'Hozirgina'
+      });
+      if (window.syncSharedContentToCloud) await window.syncSharedContentToCloud();
+      window.renderHomeNews();
+      e.target.reset();
+      showToast('📰 Yangilik barcha qurilmalar uchun chop etildi!', 'success');
+    }
+
+    // ==================== INITIALIZE ====================
+    window.addEventListener('DOMContentLoaded', loadInitialDatabase);
+  </script>
+</body>
+</html>
